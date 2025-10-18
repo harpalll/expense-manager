@@ -2,7 +2,7 @@
 
 this is a react appfor an expense-manager for organizations.
 
-## Preview
+<!-- ## Preview -->
 
 <!-- 🚀 [Live preview](https://tailwind-dashboard-template-dashwind.vercel.app/) -->
 

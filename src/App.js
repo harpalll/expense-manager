@@ -24,7 +24,7 @@ const token = checkAuth()
 function App() {
 
   useEffect(() => {
-    // 👆 daisy UI themes initialization
+    // themes initialization
     themeChange(false)
   }, [])
 
