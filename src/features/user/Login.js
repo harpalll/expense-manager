@@ -30,7 +30,11 @@ function Login() {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
+    const loginData = {
+      EmailAddress: data.email,
+      Password: data.password,
+    };
+    console.log(loginData);
 
     // setLoading(true);
     // TODO: Call API to check user credentials and save token in localstorage
@@ -159,13 +163,13 @@ function Login() {
                       {showPassword ? <EyeOpenSVG /> : <EyeCloseSVG />}
                     </div>
                   </div>
+                  {errors.password && (
+                    <p className="text-error text-sm">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
               </div>
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
 
               <div className="text-right text-primary">
                 <Link to="/forgot-password">
@@ -175,7 +179,6 @@ function Login() {
                 </Link>
               </div>
 
-              <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
               <button
                 type="submit"
                 className={
