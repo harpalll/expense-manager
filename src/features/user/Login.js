@@ -29,12 +29,20 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    setLoading(true);
+    // demo delay
+    await new Promise((r) =>
+      setTimeout(() => {
+        r();
+      }, 2000)
+    );
     const loginData = {
       EmailAddress: data.email,
       Password: data.password,
     };
     console.log(loginData);
+    setLoading(false);
 
     // setLoading(true);
     // TODO: Call API to check user credentials and save token in localstorage
@@ -179,13 +187,12 @@ function Login() {
                 </Link>
               </div>
 
-              <button
-                type="submit"
-                className={
-                  "btn mt-2 w-full btn-primary" + (loading ? " loading" : "")
-                }
-              >
-                Login
+              <button type="submit" className={"btn mt-2 w-full btn-primary"}>
+                {loading ? (
+                  <span className="loading loading-ball loading-md"></span>
+                ) : (
+                  "Login"
+                )}
               </button>
 
               <div className="text-center mt-4">

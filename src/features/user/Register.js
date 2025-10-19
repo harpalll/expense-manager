@@ -30,7 +30,14 @@ function Register() {
 
   const password = watch("password");
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    setLoading(true);
+    // demo delay
+    await new Promise((r) =>
+      setTimeout(() => {
+        r();
+      }, 2000)
+    );
     const registerData = {
       UserName: data.name,
       EmailAddress: data.email,
@@ -39,6 +46,8 @@ function Register() {
       MobileNo: data.mobileNumber,
     };
     console.log(registerData);
+    setLoading(false);
+
     // setLoading(true);
     // TODO: Call API to check user credentials and save token in localstorage
 
@@ -217,13 +226,12 @@ function Register() {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className={
-                  "btn mt-2 w-full btn-primary" + (loading ? " loading" : "")
-                }
-              >
-                Register
+              <button type="submit" className={"btn mt-2 w-full btn-primary"}>
+                {loading ? (
+                  <span className="loading loading-ball loading-md"></span>
+                ) : (
+                  "Register"
+                )}
               </button>
 
               <div className="text-center mt-4">
