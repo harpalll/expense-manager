@@ -1,13 +1,3 @@
-// TODO: change loading -> loading pulse
-//    <button
-//             type="submit"
-//             className={
-//               "btn mt-2 w-full btn-primary" + (loading ? " loading" : "")
-//             }
-//           >
-//             Login
-//           </button>
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import LandingIntro from "./LandingIntro";
@@ -16,6 +6,9 @@ import ErrorText from "../../components/Typography/ErrorText";
 import { useForm } from "react-hook-form";
 import { EyeOpenSVG } from "./components/EyeOpenSVG.jsx";
 import { EyeCloseSVG } from "./components/EyeCloseSVG.jsx";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
   const [loading, setLoading] = useState(false);
@@ -31,25 +24,42 @@ function Login() {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    // demo delay
-    await new Promise((r) =>
-      setTimeout(() => {
-        r();
-      }, 2000)
-    );
-    const loginData = {
-      EmailAddress: data.email,
-      Password: data.password,
-    };
-    console.log(loginData);
-    setLoading(false);
-
-    // setLoading(true);
-    // TODO: Call API to check user credentials and save token in localstorage
-
-    // localStorage.setItem("token", "DumyTokenHere");
-    // setLoading(false);
-    // window.location.href = "/app/welcome";
+    try {
+      const response = await axios.post("/login", {
+        emailAddress: data.email,
+        password: data.password,
+        Role: data.role === "admin" ? 0 : 1,
+      });
+      const token = response.data.data;
+      // console.log(`SUCCESS: ${response.data.message}`);
+      toast.success("Login Successfull");
+      localStorage.setItem("token", token);
+      try {
+        const decoded = jwtDecode(token);
+        localStorage.setItem("info", JSON.stringify(decoded));
+      } catch (err) {
+        console.error("Invalid token:", err.message);
+      }
+      window.location.href = "/app/dashboard";
+    } catch (error) {
+      if (error.response) {
+        toast.error(`ERROR: ${error.response.data.message}`);
+        console.error(
+          `ERROR: Status Code: ${error.response.status} || ERRORS:`,
+          error.response.data
+        );
+      } else if (error.request) {
+        // no response
+        toast.error("ERROR: No response received from server");
+        console.error("ERROR: No response received from server", error.request);
+      } else {
+        // Something else went wrong
+        toast.error("ERROR: Request setup failed");
+        console.error("ERROR: Request setup failed", error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   //   const submitForm = (e) => {
@@ -162,6 +172,7 @@ function Login() {
                         },
                       })}
                       className="w-full pr-10 input  input-bordered"
+                      autoComplete="true"
                     />
 
                     <div

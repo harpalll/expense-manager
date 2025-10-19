@@ -5,6 +5,8 @@ import InputText from "../../components/Input/InputText";
 import { useForm } from "react-hook-form";
 import { EyeOpenSVG } from "./components/EyeOpenSVG.jsx";
 import { EyeCloseSVG } from "./components/EyeCloseSVG.jsx";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 /*
     General Component: 
@@ -32,27 +34,39 @@ function Register() {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    // demo delay
-    await new Promise((r) =>
-      setTimeout(() => {
-        r();
-      }, 2000)
-    );
-    const registerData = {
-      UserName: data.name,
-      EmailAddress: data.email,
-      Password: data.password,
-      confirmPassword: data.confirmPassword,
-      MobileNo: data.mobileNumber,
-    };
-    console.log(registerData);
-    setLoading(false);
+    try {
+      const response = await axios.post("/api/User", {
+        userName: data.name,
+        emailAddress: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        mobileNo: data.mobileNumber,
+      });
 
-    // setLoading(true);
-    // TODO: Call API to check user credentials and save token in localstorage
+      // console.log(`SUCCESS: ${response.data.message}`);
+      toast.success("Registration Successfull");
+      window.location.href = "/login";
+    } catch (error) {
+      if (error.response) {
+        toast.error(`ERROR: ${error.response.data.message}`);
+        console.error(
+          `ERROR: Status Code: ${error.response.status} || ERRORS:`,
+          error.response.data
+        );
+      } else if (error.request) {
+        // no response
+        toast.error("ERROR: No response received from server");
+        console.error("ERROR: No response received from server", error.request);
+      } else {
+        // Something else went wrong
+        toast.error("ERROR: Request setup failed");
+        console.error("ERROR: Request setup failed", error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
 
     // localStorage.setItem("token", "DumyTokenHere");
-    // setLoading(false);
     // window.location.href = "/app/welcome";
   };
 

@@ -1,20 +1,35 @@
-import React,  { Suspense } from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import store from './app/store'
-import { Provider } from 'react-redux'
-import SuspenseContent from './containers/SuspenseContent';
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import store from "./app/store";
+import { Provider } from "react-redux";
+import SuspenseContent from "./containers/SuspenseContent";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-    <Suspense fallback={<SuspenseContent />}>
-        <Provider store={store}>
-            <App />
-        </Provider>
-    </Suspense>
+  <Suspense fallback={<SuspenseContent />}>
+    <Provider store={store}>
+      <App />
+      {/* Toast */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
+    </Provider>
+  </Suspense>
   // </React.StrictMode>
 );
 

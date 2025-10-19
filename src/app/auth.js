@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const checkAuth = () => {
   /*  Getting token value stored in localstorage, if token is not present we will open login page 
@@ -19,12 +20,10 @@ const checkAuth = () => {
     window.location.href = "/login";
     return;
   } else {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${TOKEN}`;
-
+    // axios.defaults.headers.common["Authorization"] = `Bearer ${TOKEN}`;
     axios.interceptors.request.use(
       function (config) {
-        // global loading indicator
-        document.body.classList.add("loading-indicator");
+        config.headers.Authorization = `Bearer ${TOKEN}`;
         return config;
       },
       function (error) {
@@ -33,13 +32,16 @@ const checkAuth = () => {
     );
 
     axios.interceptors.response.use(
-      function (response) {
-        // hide global loading indicator
-        document.body.classList.remove("loading-indicator");
-        return response;
-      },
-      function (error) {
-        document.body.classList.remove("loading-indicator");
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          console.warn("Unauthorized — redirecting to login...");
+          // clear token
+          localStorage.removeItem("token");
+          localStorage.removeItem("info");
+          window.location.href = "/login";
+        }
+        console.error("API Error:", error.response?.data || error.message);
         return Promise.reject(error);
       }
     );
