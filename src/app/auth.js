@@ -38,7 +38,6 @@ const checkAuth = () => {
           console.warn("Unauthorized — redirecting to login...");
           // clear token
           localStorage.removeItem("token");
-          localStorage.removeItem("info");
           window.location.href = "/login";
         }
         console.error("API Error:", error.response?.data || error.message);

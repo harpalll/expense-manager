@@ -8,7 +8,6 @@ import { EyeOpenSVG } from "./components/EyeOpenSVG.jsx";
 import { EyeCloseSVG } from "./components/EyeCloseSVG.jsx";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
 
 function Login() {
   const [loading, setLoading] = useState(false);
@@ -34,12 +33,6 @@ function Login() {
       // console.log(`SUCCESS: ${response.data.message}`);
       toast.success("Login Successfull");
       localStorage.setItem("token", token);
-      try {
-        const decoded = jwtDecode(token);
-        localStorage.setItem("info", JSON.stringify(decoded));
-      } catch (err) {
-        console.error("Invalid token:", err.message);
-      }
       window.location.href = "/app/dashboard";
     } catch (error) {
       if (error.response) {

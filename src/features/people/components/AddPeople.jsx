@@ -7,8 +7,6 @@ import { EyeOpenSVG } from "../../user/components/EyeOpenSVG";
 import { EyeCloseSVG } from "../../user/components/EyeCloseSVG";
 
 const AddPeople = () => {
-  const userInfo = JSON.parse(localStorage.getItem("info"));
-
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   //   form state
@@ -32,7 +30,6 @@ const AddPeople = () => {
         confirmPassword: data.confirmPassword,
         mobileNo: data.mobileNumber,
         description: data.description,
-        userID: userInfo.id,
       });
       toast.success(response.data.message);
       window.location.href = "/app/people";
