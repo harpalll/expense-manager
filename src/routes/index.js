@@ -7,9 +7,13 @@ const Page404 = lazy(() => import("../pages/protected/404"));
 const Blank = lazy(() => import("../pages/protected/Blank"));
 const Charts = lazy(() => import("../pages/protected/Charts"));
 const Leads = lazy(() => import("../pages/protected/Leads"));
+// * People Routes
 const People = lazy(() => import("../pages/protected/People"));
 const AddPeople = lazy(() =>
   import("../features/people/components/AddPeople.jsx")
+);
+const EditPeople = lazy(() =>
+  import("../features/people/components/EditPeople.jsx")
 );
 
 const Calendar = lazy(() => import("../pages/protected/Calendar"));
@@ -72,6 +76,10 @@ const routes = [
   {
     path: "/people/add",
     component: AddPeople,
+  },
+  {
+    path: "/people/edit/:peopleId",
+    component: EditPeople,
   },
   {
     path: "/charts",

@@ -1,40 +1,37 @@
-import {useDispatch, useSelector} from 'react-redux'
-import axios from 'axios'
-import { CONFIRMATION_MODAL_CLOSE_TYPES, MODAL_CLOSE_TYPES } from '../../../utils/globalConstantUtil'
-import { deleteLead } from '../../leads/leadSlice'
-import { showNotification } from '../headerSlice'
+import { useDispatch } from "react-redux";
+import { showNotification } from "../headerSlice";
 
-function ConfirmationModalBody({ extraObject, closeModal}){
+function ConfirmationModalBody({ extraObject, closeModal }) {
+  const dispatch = useDispatch();
+  const { message, onConfirm } = extraObject;
 
-    const dispatch = useDispatch()
-
-    const { message, type, _id, index} = extraObject
-
-
-    const proceedWithYes = async() => {
-        if(type === CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE){
-            // positive response, call api or dispatch redux function
-            dispatch(deleteLead({index}))
-            dispatch(showNotification({message : "Lead Deleted!", status : 1}))
-        }
-        closeModal()
+  const handleConfirm = async () => {
+    try {
+      if (onConfirm && typeof onConfirm === "function") {
+        await onConfirm();
+      }
+      dispatch(showNotification({ message: "Action completed!", status: 1 }));
+    } catch (err) {
+      dispatch(showNotification({ message: "Action failed!", status: 0 }));
+    } finally {
+      closeModal();
     }
+  };
 
-    return(
-        <> 
-        <p className=' text-xl mt-8 text-center'>
-            {message}
-        </p>
+  return (
+    <>
+      <p className="text-xl mt-8 text-center">{message}</p>
 
-        <div className="modal-action mt-12">
-                
-                <button className="btn btn-outline   " onClick={() => closeModal()}>Cancel</button>
-
-                <button className="btn btn-primary w-36" onClick={() => proceedWithYes()}>Yes</button> 
-
-        </div>
-        </>
-    )
+      <div className="modal-action mt-12">
+        <button className="btn btn-outline" onClick={closeModal}>
+          Cancel
+        </button>
+        <button className="btn btn-primary w-36" onClick={handleConfirm}>
+          Yes
+        </button>
+      </div>
+    </>
+  );
 }
 
-export default ConfirmationModalBody
+export default ConfirmationModalBody;
