@@ -33,7 +33,10 @@ function Login() {
       // console.log(`SUCCESS: ${response.data.message}`);
       toast.success("Login Successfull");
       localStorage.setItem("token", token);
-      window.location.href = "/admin/app/dashboard";
+      if (data.role === "admin") {
+        window.location.href = "/admin/app/dashboard";
+      }
+      window.location.href = "/people/people-dashboard";
     } catch (error) {
       if (error.response) {
         toast.error(`ERROR: ${error.response.data.message}`);
