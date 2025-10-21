@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 import ArrowUpIcon from "@heroicons/react/24/outline/ArrowUpIcon";
 import ArrowDownIcon from "@heroicons/react/24/outline/ArrowDownIcon";
+import { toast } from "react-toastify";
 
 const getStatusBadge = (isActive) => {
   return isActive ? (
