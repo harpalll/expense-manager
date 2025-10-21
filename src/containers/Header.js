@@ -7,17 +7,23 @@ import MoonIcon from "@heroicons/react/24/outline/MoonIcon";
 import SunIcon from "@heroicons/react/24/outline/SunIcon";
 import { openRightDrawer } from "../features/common/rightDrawerSlice";
 import { RIGHT_DRAWER_TYPES } from "../utils/globalConstantUtil";
-
 import { NavLink, Routes, Link, useLocation } from "react-router-dom";
 import axios from "axios";
+import { fetchUserInfo } from "../features/auth/authSlice";
+// fetch username from /me endpoint
 const userInfo = JSON.parse(localStorage.getItem("info"));
 
 function Header() {
   const dispatch = useDispatch();
   const { noOfNotifications, pageTitle } = useSelector((state) => state.header);
+  const { user, loading } = useSelector((state) => state.auth);
   const [currentTheme, setCurrentTheme] = useState(
     localStorage.getItem("theme")
   );
+
+  useEffect(() => {
+    dispatch(fetchUserInfo());
+  }, []);
 
   useEffect(() => {
     themeChange(false);
@@ -112,17 +118,22 @@ function Header() {
               </div>
             </label> */}
             <label tabIndex={0} className="btn btn-ghost">
-              <div className="w-10">{userInfo.name}</div>
+              <div className="w-10">
+                {loading ? (
+                  <>
+                    <span className="loading loading-ball loading-sm"></span>
+                  </>
+                ) : (
+                  <>{user.name}</>
+                )}
+              </div>
             </label>
             <ul
               tabIndex={0}
               className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li className="justify-between">
-                <Link to={"/app/settings-profile"}>
-                  Profile Settings
-                  <span className="badge">New</span>
-                </Link>
+                <Link to={"/app/admin-profile"}>Profile</Link>
               </li>
               <li className="">
                 <Link to={"/app/settings-billing"}>Bill History</Link>

@@ -104,7 +104,7 @@ function Register() {
               <div className="mb-4">
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content"}>Name</span>
+                    <span className={"label-text text-base-content required"}>Name</span>
                   </label>
                   <input
                     type="text"
@@ -123,7 +123,7 @@ function Register() {
 
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content"}>
+                    <span className={"label-text text-base-content required"}>
                       Email Id
                     </span>
                   </label>
@@ -148,7 +148,7 @@ function Register() {
 
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content"}>
+                    <span className={"label-text text-base-content required"}>
                       Password
                     </span>
                   </label>
@@ -184,7 +184,7 @@ function Register() {
 
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content"}>
+                    <span className={"label-text text-base-content required"}>
                       Confirm Password
                     </span>
                   </label>
@@ -216,7 +216,7 @@ function Register() {
 
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content"}>
+                    <span className={"label-text text-base-content required"}>
                       Mobile Number
                     </span>
                   </label>

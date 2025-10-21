@@ -6,21 +6,25 @@ import SuspenseContent from "../../containers/SuspenseContent.js";
 import EllipsisVerticalIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
+import ArrowUpIcon from "@heroicons/react/24/outline/ArrowUpIcon";
+import ArrowDownIcon from "@heroicons/react/24/outline/ArrowDownIcon";
 import { openModal } from "../common/modalSlice.js";
-
 import {
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import ArrowPathIcon from "@heroicons/react/24/outline/ArrowPathIcon.js";
 
+// * table columns definition
 const columns = [
-  { accessorKey: "peopleID", header: "Id" },
+  { accessorKey: "peopleID", header: "Id", sortingFn: "alphanumeric" },
   { accessorKey: "peopleCode", header: "Code" },
   { accessorKey: "peopleName", header: "Name" },
   { accessorKey: "emailAddress", header: "Email" },
@@ -34,6 +38,7 @@ const columns = [
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => <Actions people={row.original} />,
+    enableSorting: false,
   },
 ];
 
@@ -45,14 +50,8 @@ const getStatusBadge = (isActive) => {
   );
 };
 
-// const handleDelete = (id) => {
-//   // call delete api
-//   console.log("delete: " + id);
-// };
-
 const Actions = ({ people }) => {
   const [open, setOpen] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const ref = useRef(null);
   const dispatch = useDispatch();
 
@@ -66,14 +65,13 @@ const Actions = ({ people }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleDelete = () => {
+  const handleToggleStatus = () => {
     dispatch(
       openModal({
         bodyType: "CONFIRMATION_MODAL",
         extraObject: {
-          message: `Are you sure you want to delete ${people.peopleName}?`,
+          message: `Are you sure you want to toggle ${people.peopleName}'s status?`,
           onConfirm: async () => {
-            // await axios.delete(`/api/People/${people.PeopleID}`);
             console.log("deleting : " + people.peopleID);
           },
         },
@@ -91,23 +89,23 @@ const Actions = ({ people }) => {
       </button>
 
       {open && (
-        <ul className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg rounded z-50 menu p-2">
+        <ul className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded z-50 menu p-2">
           <li>
             <Link
               to={`/app/people/edit/${people.peopleID}`}
-              className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-gray-100 normal-case"
+              className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 normal-case text-gray-800 dark:text-gray-100"
             >
-              <PencilIcon className="w-4 h-4 mr-2" />
+              <PencilIcon className="w-4 h-4" />
               Edit
             </Link>
           </li>
           <li>
             <button
-              className="normal-case flex items-center gap-2 px-4 py-2 hover:bg-red-100 w-full text-left text-red-600"
-              onClick={handleDelete}
+              className="flex items-center gap-2 px-4 py-2 w-full text-left  hover:bg-gray-100 dark:hover:bg-gray-700 normal-case text-gray-800 dark:text-gray-100"
+              onClick={handleToggleStatus}
             >
-              <TrashIcon className="w-4 h-4 mr-2" />
-              Delete
+              <ArrowPathIcon className="w-4 h-4" />
+              Toggle Status
             </button>
           </li>
         </ul>
@@ -120,13 +118,14 @@ function People() {
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState([]);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const fetchPeople = async () => {
       setLoading(true);
       try {
         const response = await axios.get("/api/People");
-        toast.success(response.data.message);
         setPeople(response.data.data);
       } catch (error) {
         if (error.response) {
@@ -157,11 +156,13 @@ function People() {
   const table = useReactTable({
     data: people,
     columns,
-    state: { globalFilter },
+    state: { globalFilter, sorting },
     onGlobalFilterChange: setGlobalFilter,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const TopSideButtons = () => {
@@ -176,23 +177,21 @@ function People() {
     );
   };
 
-  // const updateIntegrationStatus = (index) => {
-  //   let people = people[index];
-  //   setPeople(
-  //     people.map((i, k) => {
-  //       if (k === index) return { ...i, isActive: !i.IsActive };
-  //       return i;
-  //     })
-  //   );
-  //   dispatch(
-  //     showNotification({
-  //       message: `${people.PeopleName} ${
-  //         people.IsActive ? "disabled" : "enabled"
-  //       }`,
-  //       status: 1,
-  //     })
-  //   );
-  // };
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -205,23 +204,61 @@ function People() {
           <SuspenseContent />
         ) : (
           <div className="overflow-x-auto w-full">
-            <input
-              type="text"
-              value={globalFilter ?? ""}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              placeholder="Search..."
-              className="mb-4 p-2 rounded input input-bordered"
-            />
+            {/* search */}
+            <div className="w-full flex items-center gap-2 pb-4">
+              <div className="flex items-center input input-bordered w-full px-2">
+                <svg
+                  className="h-5 w-5 text-gray-400 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+
+                <input
+                  ref={searchRef}
+                  type="search"
+                  className="flex-1 bg-transparent outline-none placeholder-gray-400"
+                  placeholder="Search"
+                  value={globalFilter ?? ""}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
+                />
+              </div>
+
+              <div className="flex items-center gap-1 text-sm opacity-60">
+                <kbd className="kbd kbd-sm">⌘</kbd>
+                <kbd className="kbd kbd-sm">K</kbd>
+              </div>
+            </div>
+
             <table className="table w-full">
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <th key={header.id} className="px-2 py-1 font-bold">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      <th
+                        key={header.id}
+                        className="px-2 py-1 font-bold cursor-pointer select-none"
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                          </span>
+                          {{
+                            asc: <ArrowUpIcon className="w-4 h-4" />,
+                            desc: <ArrowDownIcon className="w-4 h-4" />,
+                          }[header.column.getIsSorted()] ?? null}
+                        </div>
                       </th>
                     ))}
                   </tr>

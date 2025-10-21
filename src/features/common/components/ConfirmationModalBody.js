@@ -26,7 +26,7 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
         <button className="btn btn-outline" onClick={closeModal}>
           Cancel
         </button>
-        <button className="btn btn-primary w-36" onClick={handleConfirm}>
+        <button className="btn btn-primary w-20" onClick={handleConfirm}>
           Yes
         </button>
       </div>

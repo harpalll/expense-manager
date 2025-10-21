@@ -1,9 +1,15 @@
 module.exports = Object.freeze({
+  // MODAL_BODY_TYPES: {
+  //   USER_DETAIL: "USER_DETAIL",
+  //   LEAD_ADD_NEW: "LEAD_ADD_NEW",
+  //   CONFIRMATION: "CONFIRMATION",
+  //   DEFAULT: "",
+  // },
   MODAL_BODY_TYPES: {
-    USER_DETAIL: "USER_DETAIL",
-    LEAD_ADD_NEW: "LEAD_ADD_NEW",
-    CONFIRMATION: "CONFIRMATION",
-    DEFAULT: "",
+    CONFIRMATION: "CONFIRMATION_MODAL",
+    ADD_EDIT_PEOPLE: "ADD_EDIT_PEOPLE_MODAL",
+    ADD_EDIT_CATEGORY: "ADD_EDIT_CATEGORY_MODAL",
+    // add more entity-specific modals as needed
   },
 
   RIGHT_DRAWER_TYPES: {

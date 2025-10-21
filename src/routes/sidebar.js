@@ -10,6 +10,9 @@ import ExclamationTriangleIcon from "@heroicons/react/24/outline/ExclamationTria
 import CalendarDaysIcon from "@heroicons/react/24/outline/CalendarDaysIcon";
 import ArrowRightOnRectangleIcon from "@heroicons/react/24/outline/ArrowRightOnRectangleIcon";
 import UserIcon from "@heroicons/react/24/outline/UserIcon";
+import UserCircleIcon from "@heroicons/react/24/outline/UserCircleIcon";
+import CubeIcon from "@heroicons/react/24/outline/CubeIcon";
+import CubeTransparentIcon from "@heroicons/react/24/outline/CubeTransparentIcon";
 import Cog6ToothIcon from "@heroicons/react/24/outline/Cog6ToothIcon";
 import ChartBarIcon from "@heroicons/react/24/outline/ChartBarIcon";
 import CurrencyDollarIcon from "@heroicons/react/24/outline/CurrencyDollarIcon";
@@ -23,34 +26,45 @@ const submenuIconClasses = `h-5 w-5`;
 
 const routes = [
   {
-    path: "/app/dashboard",
-    icon: <Squares2X2Icon className={iconClasses} />,
-    name: "Dashboard",
+    path: "/app/dashboard", // url
+    icon: <Squares2X2Icon className={iconClasses} />, // icon component
+    name: "Dashboard", // name that appear in Sidebar
   },
   {
-    path: "/app/leads", // url
-    icon: <InboxArrowDownIcon className={iconClasses} />, // icon component
-    name: "Leads", // name that appear in Sidebar
+    path: "/app/admins",
+    icon: <UserCircleIcon className={iconClasses} />,
+    name: "Admins",
   },
   {
-    path: "/app/transactions", // url
-    icon: <CurrencyDollarIcon className={iconClasses} />, // icon component
-    name: "Transactions", // name that appear in Sidebar
+    path: "/app/people",
+    icon: <UserIcon className={iconClasses} />,
+    name: "People",
   },
   {
-    path: "/app/charts", // url
-    icon: <ChartBarIcon className={iconClasses} />, // icon component
-    name: "Analytics", // name that appear in Sidebar
+    path: "/app/category",
+    icon: <CubeIcon className={iconClasses} />,
+    name: "Category",
   },
   {
-    path: "/app/people", // url
-    icon: <UserIcon className={iconClasses} />, // icon component
-    name: "People", // name that appear in Sidebar
+    path: "/app/sub-category",
+    icon: <CubeTransparentIcon className={iconClasses} />,
+    name: "Sub Category",
   },
   {
-    path: "/app/calendar", // url
-    icon: <CalendarDaysIcon className={iconClasses} />, // icon component
-    name: "Calendar", // name that appear in Sidebar
+    path: "/app/transactions",
+    icon: <CurrencyDollarIcon className={iconClasses} />,
+    name: "Transactions",
+  },
+  {
+    path: "/app/charts",
+    icon: <ChartBarIcon className={iconClasses} />,
+    name: "Analytics",
+  },
+
+  {
+    path: "/app/calendar",
+    icon: <CalendarDaysIcon className={iconClasses} />,
+    name: "Calendar",
   },
 
   {
@@ -64,9 +78,9 @@ const routes = [
         name: "Login",
       },
       {
-        path: "/register", //url
-        icon: <UserIcon className={submenuIconClasses} />, // icon component
-        name: "Register", // name that appear in Sidebar
+        path: "/register",
+        icon: <UserIcon className={submenuIconClasses} />,
+        name: "Register",
       },
       {
         path: "/forgot-password",
@@ -86,14 +100,14 @@ const routes = [
     ],
   },
   {
-    path: "", //no url needed as this has submenu
-    icon: <Cog6ToothIcon className={`${iconClasses} inline`} />, // icon component
-    name: "Settings", // name that appear in Sidebar
+    path: "",
+    icon: <Cog6ToothIcon className={`${iconClasses} inline`} />,
+    name: "Settings",
     submenu: [
       {
-        path: "/app/settings-profile", //url
-        icon: <UserIcon className={submenuIconClasses} />, // icon component
-        name: "Profile", // name that appear in Sidebar
+        path: "/app/admin-profile",
+        icon: <UserIcon className={submenuIconClasses} />,
+        name: "Profile",
       },
       {
         path: "/app/settings-billing",
@@ -101,21 +115,21 @@ const routes = [
         name: "Billing",
       },
       {
-        path: "/app/settings-team", // url
-        icon: <UsersIcon className={submenuIconClasses} />, // icon component
-        name: "Team Members", // name that appear in Sidebar
+        path: "/app/settings-team",
+        icon: <UsersIcon className={submenuIconClasses} />,
+        name: "Team Members",
       },
     ],
   },
   {
-    path: "", //no url needed as this has submenu
-    icon: <DocumentTextIcon className={`${iconClasses} inline`} />, // icon component
-    name: "Documentation", // name that appear in Sidebar
+    path: "",
+    icon: <DocumentTextIcon className={`${iconClasses} inline`} />,
+    name: "Documentation",
     submenu: [
       {
-        path: "/app/getting-started", // url
-        icon: <DocumentTextIcon className={submenuIconClasses} />, // icon component
-        name: "Getting Started", // name that appear in Sidebar
+        path: "/app/getting-started",
+        icon: <DocumentTextIcon className={submenuIconClasses} />,
+        name: "Getting Started",
       },
       {
         path: "/app/features",

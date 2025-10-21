@@ -86,7 +86,9 @@ function Login() {
                 {/* ROLE RADIO */}
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className="label-text text-base-content">Role</span>
+                    <span className="label-text text-base-content required">
+                      Role
+                    </span>
                   </label>
 
                   <div className="flex gap-2">
@@ -122,7 +124,7 @@ function Login() {
 
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content"}>
+                    <span className={"label-text text-base-content required"}>
                       Email Id
                     </span>
                   </label>
@@ -147,7 +149,7 @@ function Login() {
 
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content"}>
+                    <span className={"label-text text-base-content required"}>
                       Password
                     </span>
                   </label>

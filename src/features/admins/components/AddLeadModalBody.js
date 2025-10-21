@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux"
 import InputText from '../../../components/Input/InputText'
 import ErrorText from '../../../components/Typography/ErrorText'
 import { showNotification } from "../../common/headerSlice"
-import { addNewLead } from "../leadSlice"
+import { addNewLead } from "../adminSlice"
 
 const INITIAL_LEAD_OBJ = {
     first_name : "",

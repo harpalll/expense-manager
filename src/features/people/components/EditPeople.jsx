@@ -28,7 +28,7 @@ const EditPeople = () => {
         reset({
           peopleName: response.data.data.peopleName,
           mobileNumber: response.data.data.mobileNo,
-          // optionally description: response.data.data.description
+          description: response.data.data.description,
         });
       } catch (error) {
         if (error.response) {
@@ -58,10 +58,13 @@ const EditPeople = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
+    console.log(data);
+    
     try {
       const response = await axios.patch(`/api/People/${peopleId}`, {
         peopleName: data.peopleName,
         mobileNo: data.mobileNumber,
+        description: data.description,
       });
       toast.success(response.data.message);
       window.location.href = "/app/people";
@@ -139,8 +142,7 @@ const EditPeople = () => {
               </div>
             </div>
 
-            {/* OPTIONAL */}
-            {/* <div className="grid grid-cols-1">
+            <div className="grid grid-cols-1">
               <div className="form-control w-full mt-4">
                 <label className="label">
                   <span className={"label-text text-base-content"}>
@@ -154,7 +156,7 @@ const EditPeople = () => {
                   rows={3}
                 />
               </div>
-            </div> */}
+            </div>
 
             <div className="mt-16">
               <button className="btn btn-primary float-right" type="submit">
