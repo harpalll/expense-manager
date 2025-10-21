@@ -16,9 +16,6 @@ const People = lazy(() => import("../pages/protected/People"));
 const AddPeople = lazy(() =>
   import("../features/people/components/AddPeople.jsx")
 );
-const EditPeople = lazy(() =>
-  import("../features/people/components/EditPeople.jsx")
-);
 
 // * Category Routes
 const Category = lazy(() => import("../pages/protected/Category.js"));
@@ -32,7 +29,7 @@ const DocComponents = lazy(() => import("../pages/DocComponents"));
 
 const routes = [
   {
-    path: "/dashboard",
+    path: "/app/dashboard",
     component: Dashboard,
   },
   // admin routes
@@ -53,23 +50,11 @@ const routes = [
     path: "/people/add",
     component: AddPeople,
   },
-  {
-    path: "/people/edit/:peopleId",
-    component: EditPeople,
-  },
   // category routes
   {
     path: "/category",
     component: Category,
   },
-  // {
-  //   path: "/category/add",
-  //   component: AddPeople,
-  // },
-  // {
-  //   path: "/people/edit/:peopleId",
-  //   component: EditPeople,
-  // },
   // sub-category routes
   {
     path: "/sub-category",

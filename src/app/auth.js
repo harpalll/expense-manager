@@ -1,50 +1,25 @@
 import axios from "axios";
+import store from "../app/store";
+import { logout, setAuthToken } from "../features/auth/authSlice";
 
-const checkAuth = () => {
-  /*  Getting token value stored in localstorage, if token is not present we will open login page 
-    for all internal dashboard routes  */
-  const TOKEN = localStorage.getItem("token");
-  const PUBLIC_ROUTES = [
-    "login",
-    "forgot-password",
-    "register",
-    "documentation",
-  ];
+export default function checkAuth() {
+  const token = localStorage.getItem("token");
 
-  const isPublicPage = PUBLIC_ROUTES.some((r) =>
-    window.location.href.includes(r)
+  if (token) {
+    store.dispatch(setAuthToken(token));
+  }
+
+  // Global 401 handler
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        console.warn("Unauthorized — logging out...");
+        store.dispatch(logout());
+      }
+      return Promise.reject(error);
+    }
   );
 
-  if (!TOKEN && !isPublicPage) {
-    window.location.href = "/login";
-    return;
-  } else {
-    // axios.defaults.headers.common["Authorization"] = `Bearer ${TOKEN}`;
-    axios.interceptors.request.use(
-      function (config) {
-        config.headers.Authorization = `Bearer ${TOKEN}`;
-        return config;
-      },
-      function (error) {
-        return Promise.reject(error);
-      }
-    );
-
-    axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response && error.response.status === 401) {
-          console.warn("Unauthorized — redirecting to login...");
-          // clear token
-          localStorage.removeItem("token");
-          window.location.href = "/login";
-        }
-        console.error("API Error:", error.response?.data || error.message);
-        return Promise.reject(error);
-      }
-    );
-    return TOKEN;
-  }
-};
-
-export default checkAuth;
+  return !!token;
+}

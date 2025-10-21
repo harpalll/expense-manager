@@ -2,10 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchUserInfo = createAsyncThunk(
-  "/userInfo",
+  "auth/userInfo",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("/api/Auth/me");
+
       return response.data.data;
     } catch (error) {
       if (error.response) {
@@ -29,8 +30,27 @@ export const fetchUserInfo = createAsyncThunk(
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { user: [], loading: false, error: null },
-  reducers: {},
+  initialState: {
+    user: null,
+    loading: false,
+    error: null,
+    isAuthenticated: false,
+  },
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      localStorage.removeItem("token");
+      delete axios.defaults.headers.common["Authorization"];
+    },
+    setAuthToken: (_, action) => {
+      const token = action.payload;
+      if (token) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        localStorage.setItem("token", token);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserInfo.pending, (state) => {
@@ -40,14 +60,17 @@ const authSlice = createSlice({
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(fetchUserInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || action.error.message;
+        state.isAuthenticated = false;
+        state.user = null;
       });
   },
 });
 
-export const {} = authSlice.actions;
+export const { logout, setAuthToken } = authSlice.actions;
 
 export default authSlice.reducer;

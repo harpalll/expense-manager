@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../../features/common/headerSlice";
-import Dashboard from "../../features/dashboard/index";
+// import AdminProfile from "../../features/settings/adminProfile";
+import PeopleProfile from "../../features/settings/peopleProfile";
 
 function InternalPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setPageTitle({ title: "Dashboard" }));
+    dispatch(setPageTitle({ title: "Profile" }));
   }, []);
 
-  return <Dashboard />;
+  return <PeopleProfile />;
 }
 
 export default InternalPage;

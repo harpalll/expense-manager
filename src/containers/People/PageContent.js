@@ -1,18 +1,17 @@
-import Header from "./Header";
+import Header from "../Header";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import routes from "../routes/index";
 import { Suspense, lazy } from "react";
-import SuspenseContent from "./SuspenseContent";
+import SuspenseContent from "../SuspenseContent";
 import { useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
+import peopleRoutes from "../../routes/peopleRoutes";
 
-const Page404 = lazy(() => import("../pages/protected/404"));
+const Page404 = lazy(() => import("../../pages/protected/404"));
 
 function PageContent() {
   const mainContentRef = useRef(null);
   const { pageTitle } = useSelector((state) => state.header);
 
-  // Scroll back to top on new page load
   useEffect(() => {
     mainContentRef.current.scroll({
       top: 0,
@@ -29,7 +28,7 @@ function PageContent() {
       >
         <Suspense fallback={<SuspenseContent />}>
           <Routes>
-            {routes.map((route, key) => {
+            {peopleRoutes.map((route, key) => {
               return (
                 <Route
                   key={key}

@@ -57,38 +57,42 @@ function EditPeopleModal({ closeModal }) {
       <h3 className="font-bold text-lg mb-4">Edit People</h3>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-control w-full mt-4">
-          <label className="label">
-            <span className="label-text required">Name</span>
-          </label>
-          <input
-            type="text"
-            {...register("peopleName", { required: "Name is required" })}
-            className="input input-bordered w-full"
-          />
-          {errors.peopleName && (
-            <p className="text-red-500 text-sm">{errors.peopleName.message}</p>
-          )}
-        </div>
+        <div className="grid grid-cols-2 gap-6">
+          <div className="form-control w-full mt-4">
+            <label className="label">
+              <span className="label-text required">Name</span>
+            </label>
+            <input
+              type="text"
+              {...register("peopleName", { required: "Name is required" })}
+              className="input input-bordered w-full"
+            />
+            {errors.peopleName && (
+              <p className="text-red-500 text-sm">
+                {errors.peopleName.message}
+              </p>
+            )}
+          </div>
 
-        <div className="form-control w-full mt-4">
-          <label className="label">
-            <span className="label-text required">Mobile Number</span>
-          </label>
-          <input
-            type="text"
-            {...register("mobileNo", {
-              required: "Mobile Number is required",
-              pattern: {
-                value: /^[\d]{10}$/,
-                message: "Please enter a valid mobile number",
-              },
-            })}
-            className="input input-bordered w-full"
-          />
-          {errors.mobileNo && (
-            <p className="text-red-500 text-sm">{errors.mobileNo.message}</p>
-          )}
+          <div className="form-control w-full mt-4">
+            <label className="label">
+              <span className="label-text required">Mobile Number</span>
+            </label>
+            <input
+              type="text"
+              {...register("mobileNo", {
+                required: "Mobile Number is required",
+                pattern: {
+                  value: /^[\d]{10}$/,
+                  message: "Please enter a valid mobile number",
+                },
+              })}
+              className="input input-bordered w-full"
+            />
+            {errors.mobileNo && (
+              <p className="text-red-500 text-sm">{errors.mobileNo.message}</p>
+            )}
+          </div>
         </div>
 
         <div className="form-control w-full mt-4">

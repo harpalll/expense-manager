@@ -26,43 +26,43 @@ const submenuIconClasses = `h-5 w-5`;
 
 const routes = [
   {
-    path: "/app/dashboard", // url
+    path: "/admin/app/dashboard", // url
     icon: <Squares2X2Icon className={iconClasses} />, // icon component
     name: "Dashboard", // name that appear in Sidebar
   },
   {
-    path: "/app/admins",
+    path: "/admin/admins",
     icon: <UserCircleIcon className={iconClasses} />,
     name: "Admins",
   },
   {
-    path: "/app/people",
+    path: "/admin/people",
     icon: <UserIcon className={iconClasses} />,
     name: "People",
   },
   {
-    path: "/app/category",
+    path: "/admin/category",
     icon: <CubeIcon className={iconClasses} />,
     name: "Category",
   },
   {
-    path: "/app/sub-category",
+    path: "/admin/sub-category",
     icon: <CubeTransparentIcon className={iconClasses} />,
     name: "Sub Category",
   },
   {
-    path: "/app/transactions",
+    path: "/admin/transactions",
     icon: <CurrencyDollarIcon className={iconClasses} />,
     name: "Transactions",
   },
   {
-    path: "/app/charts",
+    path: "/admin/charts",
     icon: <ChartBarIcon className={iconClasses} />,
     name: "Analytics",
   },
 
   {
-    path: "/app/calendar",
+    path: "/admin/calendar",
     icon: <CalendarDaysIcon className={iconClasses} />,
     name: "Calendar",
   },
