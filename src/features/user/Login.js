@@ -35,8 +35,9 @@ function Login() {
       localStorage.setItem("token", token);
       if (data.role === "admin") {
         window.location.href = "/admin/app/dashboard";
+      } else {
+        window.location.href = "/people/people-dashboard";
       }
-      window.location.href = "/people/people-dashboard";
     } catch (error) {
       if (error.response) {
         toast.error(`ERROR: ${error.response.data.message}`);
