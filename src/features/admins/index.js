@@ -41,8 +41,7 @@ const columns = [
 ];
 
 function Admins() {
-  const { data, loading } = useSelector((state) => state.admin);
-  const admins = data;
+  const { admins, loading, error } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
 
   const [globalFilter, setGlobalFilter] = useState("");
@@ -52,6 +51,10 @@ function Admins() {
   useEffect(() => {
     dispatch(fetchAdmins());
   }, []);
+
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
 
   const table = useReactTable({
     data: admins,

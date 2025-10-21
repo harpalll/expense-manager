@@ -11,7 +11,11 @@ import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import { showNotification } from "../common/headerSlice";
-import { fetchCategory, fetchCategoryById } from "./categorySlice";
+import {
+  fetchCategory,
+  fetchCategoryById,
+  toggleCategoryStatus,
+} from "./categorySlice";
 import SuspenseContent from "../../containers/SuspenseContent";
 import {
   useReactTable,
@@ -85,7 +89,10 @@ const Actions = ({ category }) => {
         extraObject: {
           message: `Are you sure you want to toggle ${category.categoryName}'s status?`,
           onConfirm: async () => {
-            console.log("deleting : " + category.categoryID);
+            dispatch(toggleCategoryStatus(category.categoryID))
+              .unwrap()
+              .then(() => dispatch(fetchCategory()))
+              .catch((err) => console.error(err));
           },
         },
       })

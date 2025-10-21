@@ -1,16 +1,70 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const fetchCategory = createAsyncThunk("/category", async () => {
-  const response = await axios.get("/api/Category");
-  return response.data.data;
-});
+export const fetchCategory = createAsyncThunk(
+  "/category",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/api/Category");
+      return response.data.data;
+    } catch (error) {
+      if (error.response) {
+        // API returned a status code outside 2xx
+        return rejectWithValue({
+          message: error.response.data.message,
+          status: error.response.status,
+        });
+      } else if (error.request) {
+        // No response
+        return rejectWithValue({ message: "No response received from server" });
+      } else {
+        // Something else
+        return rejectWithValue({
+          message: `Request setup failed: ${error.message}`,
+        });
+      }
+    }
+  }
+);
 
 export const fetchCategoryById = createAsyncThunk(
   "/category/fetchById",
-  async (categoryId) => {
-    const response = await axios.get(`/api/Category/${categoryId}`);
-    return response.data.data;
+  async (categoryId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/Category/${categoryId}`);
+      return response.data.data;
+    } catch (error) {
+      if (error.response) {
+        // API returned a status code outside 2xx
+        return rejectWithValue({
+          message: error.response.data.message,
+          status: error.response.status,
+        });
+      } else if (error.request) {
+        // No response
+        return rejectWithValue({ message: "No response received from server" });
+      } else {
+        // Something else
+        return rejectWithValue({
+          message: `Request setup failed: ${error.message}`,
+        });
+      }
+    }
+  }
+);
+
+export const toggleCategoryStatus = createAsyncThunk(
+  "/category/toggleStatus",
+  async (categoryId, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `/api/Category/${categoryId}/toggle-active`
+      );
+      return response.data.data;
+    } catch (error) {
+      if (error.response) return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -21,6 +75,7 @@ const categorySlice = createSlice({
     loading: false,
     categoryDetails: null,
     detailsLoading: false,
+    toggleLoading: false,
   },
   reducers: {
     clearcategoryDetails: (state) => {
@@ -29,6 +84,7 @@ const categorySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // * Get ALL
       .addCase(fetchCategory.pending, (state) => {
         state.loading = true;
       })
@@ -39,7 +95,7 @@ const categorySlice = createSlice({
       .addCase(fetchCategory.rejected, (state) => {
         state.loading = false;
       })
-      // Fetch by ID cases
+      // * Fetch by ID cases
       .addCase(fetchCategoryById.pending, (state) => {
         state.detailsLoading = true;
       })
@@ -49,11 +105,21 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCategoryById.rejected, (state) => {
         state.detailsLoading = false;
+      })
+      // * Toggle Cases
+      .addCase(toggleCategoryStatus.pending, (state) => {
+        state.toggleLoading = true;
+      })
+      .addCase(toggleCategoryStatus.fulfilled, (state) => {
+        state.toggleLoading = false;
+      })
+      .addCase(toggleCategoryStatus.rejected, (state, action) => {
+        state.toggleLoading = false;
+        state.error = action.payload || action.error.message;
       });
   },
 });
 
-export const { addNewCategory, deleteCategory, clearcategoryDetails } =
-  categorySlice.actions;
+export const { clearcategoryDetails } = categorySlice.actions;
 
 export default categorySlice.reducer;

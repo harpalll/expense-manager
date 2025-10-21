@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { fetchCategory } from "../categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function AddEditCategoryModal({ extraObject, closeModal }) {
+  const [loading, setLoading] = useState(false);
   const { mode } = extraObject || {}; // mode: 'add' | 'edit'
   const dispatch = useDispatch();
   const { categoryDetails, detailsLoading } = useSelector(
@@ -32,7 +33,7 @@ function AddEditCategoryModal({ extraObject, closeModal }) {
   }, [mode, categoryData, setValue]);
 
   const onSubmit = async (data) => {
-    console.log(data);
+    setLoading(true);
     try {
       if (mode === "add") {
         await axios.post("/api/Category", data);
@@ -46,6 +47,8 @@ function AddEditCategoryModal({ extraObject, closeModal }) {
     } catch (error) {
       toast.error("Something went wrong!");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,7 +140,13 @@ function AddEditCategoryModal({ extraObject, closeModal }) {
             Cancel
           </button>
           <button type="submit" className="btn btn-primary">
-            {mode === "add" ? "Add" : "Save Changes"}
+            {loading ? (
+              <>
+                <span className="loading loading-ball loading-md"></span>
+              </>
+            ) : (
+              <>{mode === "add" ? "Add" : "Save Changes"}</>
+            )}
           </button>
         </div>
       </form>

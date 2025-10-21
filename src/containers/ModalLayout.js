@@ -1,11 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import { closeModal } from "../features/common/modalSlice";
 import ConfirmationModalBody from "../features/common/components/ConfirmationModalBody";
-// import AddEditPeopleModal from "../features/people/components/AddEditPeopleModal";
+import EditPeopleModal from "../features/people/components/EditPeopleModal";
 import AddEditCategoryModal from "../features/category/components/AddEditCategoryModal";
 
 import { MODAL_BODY_TYPES } from "../utils/globalConstantUtil";
 import { clearcategoryDetails } from "../features/category/categorySlice";
+import { clearpeopleDetails } from "../features/people/peopleSlice";
 
 export default function ModalLayout() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export default function ModalLayout() {
   const close = () => {
     dispatch(closeModal());
     dispatch(clearcategoryDetails());
+    dispatch(clearpeopleDetails());
   };
 
   const renderModalBody = () => {
@@ -24,10 +26,8 @@ export default function ModalLayout() {
         return (
           <ConfirmationModalBody extraObject={extraObject} closeModal={close} />
         );
-      // case MODAL_BODY_TYPES.ADD_EDIT_PEOPLE:
-      //   return (
-      //     <AddEditPeopleModal extraObject={extraObject} closeModal={close} />
-      //   );
+      case MODAL_BODY_TYPES.EDIT_PEOPLE:
+        return <EditPeopleModal extraObject={extraObject} closeModal={close} />;
       case MODAL_BODY_TYPES.ADD_EDIT_CATEGORY:
         return (
           <AddEditCategoryModal extraObject={extraObject} closeModal={close} />
