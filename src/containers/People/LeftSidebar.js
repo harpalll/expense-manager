@@ -24,7 +24,7 @@ function LeftSidebar() {
         </button>
 
         <li className="mb-2 font-semibold text-xl">
-          <Link to={"/app/people-dashboard"}>
+          <Link to={"/people/people-dashboard"}>
             <img
               className="mask mask-squircle w-10"
               src="/logo.png"

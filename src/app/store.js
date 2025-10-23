@@ -6,6 +6,7 @@ import adminSlice from "../features/admins/adminSlice";
 import categorySlice from "../features/category/categorySlice";
 import authSlice from "../features/auth/authSlice";
 import peopleSlice from "../features/people/peopleSlice";
+import projectSlice from "../features/project/projectSlice";
 
 const combinedReducer = {
   header: headerSlice,
@@ -15,6 +16,7 @@ const combinedReducer = {
   category: categorySlice,
   auth: authSlice,
   people: peopleSlice,
+  project: projectSlice,
 };
 
 export default configureStore({

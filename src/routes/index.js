@@ -20,6 +20,15 @@ const AddPeople = lazy(() =>
 // * Category Routes
 const Category = lazy(() => import("../pages/protected/Category.js"));
 
+// * Project Routes
+const Project = lazy(() => import("../pages/protected/Project.js"));
+const AddProject = lazy(() =>
+  import("../features/project/components/AddProject.jsx")
+);
+const EditProject = lazy(() =>
+  import("../features/project/components/EditProject.jsx")
+);
+
 const Calendar = lazy(() => import("../pages/protected/Calendar"));
 const Team = lazy(() => import("../pages/protected/Team"));
 const Transactions = lazy(() => import("../pages/protected/Transactions"));
@@ -59,6 +68,19 @@ const routes = [
   {
     path: "/sub-category",
     component: Category,
+  },
+  // project routes
+  {
+    path: "/project",
+    component: Project,
+  },
+  {
+    path: "/project/add",
+    component: AddProject,
+  },
+  {
+    path: "/project/edit/:projectId",
+    component: EditProject,
   },
   {
     path: "/settings-team",

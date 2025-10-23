@@ -32,7 +32,7 @@ const AddPeople = () => {
         description: data.description,
       });
       toast.success(response.data.message);
-      window.location.href = "/app/people";
+      window.location.href = "/admin/people";
     } catch (error) {
       if (error.response) {
         toast.error(`ERROR: ${error.response.data.message}`);

@@ -20,6 +20,7 @@ import InboxArrowDownIcon from "@heroicons/react/24/outline/InboxArrowDownIcon";
 import UsersIcon from "@heroicons/react/24/outline/UsersIcon";
 import KeyIcon from "@heroicons/react/24/outline/KeyIcon";
 import DocumentDuplicateIcon from "@heroicons/react/24/outline/DocumentDuplicateIcon";
+import BriefcaseIcon from "@heroicons/react/24/outline/BriefcaseIcon";
 
 const iconClasses = `h-6 w-6`;
 const submenuIconClasses = `h-5 w-5`;
@@ -49,6 +50,11 @@ const routes = [
     path: "/admin/sub-category",
     icon: <CubeTransparentIcon className={iconClasses} />,
     name: "Sub Category",
+  },
+  {
+    path: "/admin/project",
+    icon: <BriefcaseIcon className={iconClasses} />,
+    name: "Project",
   },
   {
     path: "/admin/transactions",

@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
-import { showNotification } from "../common/headerSlice";
 import SuspenseContent from "../../containers/SuspenseContent.js";
 import EllipsisVerticalIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
-import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
 import ArrowUpIcon from "@heroicons/react/24/outline/ArrowUpIcon";
 import ArrowDownIcon from "@heroicons/react/24/outline/ArrowDownIcon";
@@ -17,24 +15,23 @@ import {
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import ArrowPathIcon from "@heroicons/react/24/outline/ArrowPathIcon.js";
 import {
-  fetchPeople,
-  fetchPeopleById,
-  togglePeopleStatus,
-} from "./peopleSlice.js";
-import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
+  fetchProject,
+  fetchProjectById,
+  toggleProjectStatus,
+} from "./projectSlice.js";
 
 // * table columns definition
 const columns = [
-  { accessorKey: "peopleID", header: "Id", sortingFn: "alphanumeric" },
-  { accessorKey: "peopleCode", header: "Code" },
-  { accessorKey: "peopleName", header: "Name" },
-  { accessorKey: "emailAddress", header: "Email" },
-  { accessorKey: "mobileNo", header: "Mobile" },
+  { accessorKey: "projectID", header: "Id", sortingFn: "alphanumeric" },
+  { accessorKey: "projectName", header: "Name" },
+  { accessorKey: "projectDetail", header: "Detail" },
+  { accessorKey: "description", header: "Description" },
+  { accessorKey: "projectStartDate", header: "Start Date" },
+  { accessorKey: "projectEndDate", header: "End Date" },
   {
     accessorKey: "isActive",
     header: "Active",
@@ -43,7 +40,7 @@ const columns = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <Actions people={row.original} />,
+    cell: ({ row }) => <Actions project={row.original} />,
     enableSorting: false,
   },
 ];
@@ -56,7 +53,7 @@ const getStatusBadge = (isActive) => {
   );
 };
 
-const Actions = ({ people }) => {
+const Actions = ({ project }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const dispatch = useDispatch();
@@ -76,11 +73,11 @@ const Actions = ({ people }) => {
       openModal({
         bodyType: "CONFIRMATION_MODAL",
         extraObject: {
-          message: `Are you sure you want to toggle ${people.peopleName}'s status?`,
+          message: `Are you sure you want to toggle ${project.projectName}'s status?`,
           onConfirm: async () => {
-            dispatch(togglePeopleStatus(people.peopleID))
+            dispatch(toggleProjectStatus(project.projectID))
               .unwrap()
-              .then(() => dispatch(fetchPeople()))
+              .then(() => dispatch(fetchProject()))
               .catch((err) => console.error(err));
           },
         },
@@ -88,17 +85,18 @@ const Actions = ({ people }) => {
     );
   };
 
-  const handleEdit = (peopleID) => {
+  const handleEdit = (projectID) => {
     try {
-      dispatch(
-        openModal({
-          title: "Edit People",
-          bodyType: MODAL_BODY_TYPES.EDIT_PEOPLE,
-        })
-      );
-      dispatch(fetchPeopleById(peopleID));
+      // need a form
+      //   dispatch(
+      //     openModal({
+      //       title: "Edit Project",
+      //       bodyType: MODAL_BODY_TYPES.EDIT_PEOPLE,
+      //     })
+      //   );
+      dispatch(fetchProjectById(projectID));
     } catch (error) {
-      console.error("Failed to fetch people:", error);
+      console.error("Failed to fetch project:", error);
     }
   };
 
@@ -114,14 +112,21 @@ const Actions = ({ people }) => {
       {open && (
         <ul className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded z-50 menu p-2">
           <li>
-            <button
+            {/* <button
               className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 normal-case text-gray-800 dark:text-gray-100"
-              onClick={() => handleEdit(people.peopleID)}
+              onClick={() => handleEdit(project.projectID)}
             >
               {" "}
               <PencilIcon className="w-4 h-4" />
               Edit
-            </button>
+            </button> */}
+            <Link
+              to={`/admin/project/edit/${project.projectID}`}
+              className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 normal-case text-gray-800 dark:text-gray-100"
+            >
+              <PencilIcon className="w-4 h-4 mr-2" />
+              Edit
+            </Link>
           </li>
           <li>
             <button
@@ -138,15 +143,15 @@ const Actions = ({ people }) => {
   );
 };
 
-function People() {
-  const { people, loading, error } = useSelector((state) => state.people);
+function Project() {
+  const { project, loading, error } = useSelector((state) => state.project);
   const dispatch = useDispatch();
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]);
   const searchRef = useRef(null);
 
   useEffect(() => {
-    dispatch(fetchPeople());
+    dispatch(fetchProject());
   }, []);
 
   useEffect(() => {
@@ -154,7 +159,7 @@ function People() {
   }, [error]);
 
   const table = useReactTable({
-    data: people,
+    data: project,
     columns,
     state: { globalFilter, sorting },
     onGlobalFilterChange: setGlobalFilter,
@@ -168,7 +173,7 @@ function People() {
   const TopSideButtons = () => {
     return (
       <div className="inline-block float-right">
-        <Link to={"/admin/people/add"}>
+        <Link to={"/admin/project/add"}>
           <button className="btn px-6 btn-sm normal-case btn-primary">
             Add New
           </button>
@@ -196,7 +201,7 @@ function People() {
   return (
     <>
       <TitleCard
-        title="People"
+        title="Project"
         topMargin="mt-2"
         TopSideButtons={<TopSideButtons />}
       >
@@ -204,10 +209,10 @@ function People() {
           <SuspenseContent />
         ) : (
           <>
-            {people?.length === 0 ? (
+            {project?.length === 0 ? (
               <>
                 <div className="flex justify-center items-center">
-                  <h1>No people, click on add new to get started.</h1>
+                  <h1>No project, click on add new to get started.</h1>
                 </div>
               </>
             ) : (
@@ -301,4 +306,4 @@ function People() {
   );
 }
 
-export default People;
+export default Project;
