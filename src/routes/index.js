@@ -20,6 +20,9 @@ const AddPeople = lazy(() =>
 // * Category Routes
 const Category = lazy(() => import("../pages/protected/Category.js"));
 
+// * Sub Category Routes
+const SubCategory = lazy(() => import("../pages/protected/SubCategory.js"));
+
 // * Project Routes
 const Project = lazy(() => import("../pages/protected/Project.js"));
 const AddProject = lazy(() =>
@@ -67,7 +70,7 @@ const routes = [
   // sub-category routes
   {
     path: "/sub-category",
-    component: Category,
+    component: SubCategory,
   },
   // project routes
   {

@@ -7,6 +7,8 @@ import AddEditCategoryModal from "../features/category/components/AddEditCategor
 import { MODAL_BODY_TYPES } from "../utils/globalConstantUtil";
 import { clearcategoryDetails } from "../features/category/categorySlice";
 import { clearpeopleDetails } from "../features/people/peopleSlice";
+import AddEditSubCategoryModal from "../features/subCategory/components/AddEditSubCategoryModal";
+import { clearsubcategoryDetails } from "../features/subCategory/subCategorySlice";
 
 export default function ModalLayout() {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ export default function ModalLayout() {
   const close = () => {
     dispatch(closeModal());
     dispatch(clearcategoryDetails());
+    dispatch(clearsubcategoryDetails());
     dispatch(clearpeopleDetails());
   };
 
@@ -31,6 +34,13 @@ export default function ModalLayout() {
       case MODAL_BODY_TYPES.ADD_EDIT_CATEGORY:
         return (
           <AddEditCategoryModal extraObject={extraObject} closeModal={close} />
+        );
+      case MODAL_BODY_TYPES.ADD_EDIT_SUB_CATEGORY:
+        return (
+          <AddEditSubCategoryModal
+            extraObject={extraObject}
+            closeModal={close}
+          />
         );
       default:
         return null;

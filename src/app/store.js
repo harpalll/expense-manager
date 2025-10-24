@@ -4,6 +4,7 @@ import modalSlice from "../features/common/modalSlice";
 import rightDrawerSlice from "../features/common/rightDrawerSlice";
 import adminSlice from "../features/admins/adminSlice";
 import categorySlice from "../features/category/categorySlice";
+import subCategorySlice from "../features/subCategory/subCategorySlice";
 import authSlice from "../features/auth/authSlice";
 import peopleSlice from "../features/people/peopleSlice";
 import projectSlice from "../features/project/projectSlice";
@@ -14,6 +15,7 @@ const combinedReducer = {
   modal: modalSlice,
   admin: adminSlice,
   category: categorySlice,
+  subCategory: subCategorySlice,
   auth: authSlice,
   people: peopleSlice,
   project: projectSlice,

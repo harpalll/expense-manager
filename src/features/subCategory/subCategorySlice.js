@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const fetchCategory = createAsyncThunk(
-  "/category",
+export const fetchSubCategory = createAsyncThunk(
+  "/subCategory",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/Category");
+      const response = await axios.get("/api/SubCategory");
       return response.data.data;
     } catch (error) {
       if (error.response) {
@@ -27,11 +27,11 @@ export const fetchCategory = createAsyncThunk(
   }
 );
 
-export const fetchCategoryById = createAsyncThunk(
-  "/category/fetchById",
-  async (categoryId, { rejectWithValue }) => {
+export const fetchSubCategoryById = createAsyncThunk(
+  "/subCategory/fetchById",
+  async (subCategoryId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/api/Category/${categoryId}`);
+      const response = await axios.get(`/api/SubCategory/${subCategoryId}`);
       return response.data.data;
     } catch (error) {
       if (error.response) {
@@ -53,12 +53,12 @@ export const fetchCategoryById = createAsyncThunk(
   }
 );
 
-export const toggleCategoryStatus = createAsyncThunk(
-  "/category/toggleStatus",
-  async (categoryId, { rejectWithValue }) => {
+export const toggleSubCategoryStatus = createAsyncThunk(
+  "/subCategory/toggleStatus",
+  async (subCategoryId, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `/api/Category/${categoryId}/toggle-active`
+        `/api/SubCategory/${subCategoryId}/toggle-active`
       );
       return response.data.data;
     } catch (error) {
@@ -68,84 +68,58 @@ export const toggleCategoryStatus = createAsyncThunk(
   }
 );
 
-export const fetchActiveCategory = createAsyncThunk(
-  "/category/fetchActive",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`api/Category/active`);
-      return response.data.data;
-    } catch (error) {
-      if (error.response) return rejectWithValue(error.response.data.message);
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-const categorySlice = createSlice({
-  name: "category",
+const subCategorySlice = createSlice({
+  name: "subCategory",
   initialState: {
-    category: [],
-    activeCategory: [],
-    activeCategoryLoading: false,
+    subCategory: [],
     loading: false,
-    categoryDetails: null,
+    subCategoryDetails: null,
     detailsLoading: false,
     toggleLoading: false,
   },
   reducers: {
-    clearcategoryDetails: (state) => {
-      state.categoryDetails = null;
+    clearsubcategoryDetails: (state) => {
+      state.subCategoryDetails = null;
     },
   },
   extraReducers: (builder) => {
     builder
       // * Get ALL
-      .addCase(fetchCategory.pending, (state) => {
+      .addCase(fetchSubCategory.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchCategory.fulfilled, (state, action) => {
+      .addCase(fetchSubCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.category = action.payload;
+        state.subCategory = action.payload;
       })
-      .addCase(fetchCategory.rejected, (state) => {
+      .addCase(fetchSubCategory.rejected, (state) => {
         state.loading = false;
-      })
-      // * Get ALL active
-      .addCase(fetchActiveCategory.pending, (state) => {
-        state.activeCategoryLoading = true;
-      })
-      .addCase(fetchActiveCategory.fulfilled, (state, action) => {
-        state.activeCategoryLoading = false;
-        state.activeCategory = action.payload;
-      })
-      .addCase(fetchActiveCategory.rejected, (state) => {
-        state.activeCategoryLoading = false;
       })
       // * Fetch by ID cases
-      .addCase(fetchCategoryById.pending, (state) => {
+      .addCase(fetchSubCategoryById.pending, (state) => {
         state.detailsLoading = true;
       })
-      .addCase(fetchCategoryById.fulfilled, (state, action) => {
+      .addCase(fetchSubCategoryById.fulfilled, (state, action) => {
         state.detailsLoading = false;
-        state.categoryDetails = action.payload;
+        state.subCategoryDetails = action.payload;
       })
-      .addCase(fetchCategoryById.rejected, (state) => {
+      .addCase(fetchSubCategoryById.rejected, (state) => {
         state.detailsLoading = false;
       })
       // * Toggle Cases
-      .addCase(toggleCategoryStatus.pending, (state) => {
+      .addCase(toggleSubCategoryStatus.pending, (state) => {
         state.toggleLoading = true;
       })
-      .addCase(toggleCategoryStatus.fulfilled, (state) => {
+      .addCase(toggleSubCategoryStatus.fulfilled, (state) => {
         state.toggleLoading = false;
       })
-      .addCase(toggleCategoryStatus.rejected, (state, action) => {
+      .addCase(toggleSubCategoryStatus.rejected, (state, action) => {
         state.toggleLoading = false;
         state.error = action.payload || action.error.message;
       });
   },
 });
 
-export const { clearcategoryDetails } = categorySlice.actions;
+export const { clearsubcategoryDetails } = subCategorySlice.actions;
 
-export default categorySlice.reducer;
+export default subCategorySlice.reducer;
