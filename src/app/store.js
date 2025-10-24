@@ -8,6 +8,8 @@ import subCategorySlice from "../features/subCategory/subCategorySlice";
 import authSlice from "../features/auth/authSlice";
 import peopleSlice from "../features/people/peopleSlice";
 import projectSlice from "../features/project/projectSlice";
+import expenseSlice from "../features/expense/expenseSlice";
+import incomeSlice from "../features/income/incomeSlice";
 
 const combinedReducer = {
   header: headerSlice,
@@ -19,6 +21,8 @@ const combinedReducer = {
   auth: authSlice,
   people: peopleSlice,
   project: projectSlice,
+  expense: expenseSlice,
+  income: incomeSlice,
 };
 
 export default configureStore({

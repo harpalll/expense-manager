@@ -28,7 +28,6 @@ const EditProject = () => {
 
   useEffect(() => {
     if (projectDetails) {
-      console.log(projectDetails);
       //   ? This Function converts to UTC date can cause some issues
       //   const formatDate = (d) => {
       //     // format: "YYYY-MM-DD"

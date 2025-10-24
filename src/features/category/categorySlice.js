@@ -81,6 +81,32 @@ export const fetchActiveCategory = createAsyncThunk(
   }
 );
 
+export const fetchActiveExpenseCategory = createAsyncThunk(
+  "/category/fetchActiveExpense",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`api/Category/active/expenses`);
+      return response.data.data;
+    } catch (error) {
+      if (error.response) return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchActiveIncomeCategory = createAsyncThunk(
+  "/category/fetchActiveIncome",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`api/Category/active/incomes`);
+      return response.data.data;
+    } catch (error) {
+      if (error.response) return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const categorySlice = createSlice({
   name: "category",
   initialState: {
@@ -91,6 +117,10 @@ const categorySlice = createSlice({
     categoryDetails: null,
     detailsLoading: false,
     toggleLoading: false,
+    activeExpenseCategory: [],
+    activeExpenseCategoryLoading: false,
+    activeIncomeCategory: [],
+    activeIncomeCategoryLoading: false,
   },
   reducers: {
     clearcategoryDetails: (state) => {
@@ -120,6 +150,28 @@ const categorySlice = createSlice({
       })
       .addCase(fetchActiveCategory.rejected, (state) => {
         state.activeCategoryLoading = false;
+      })
+      // * Get All Expense
+      .addCase(fetchActiveExpenseCategory.pending, (state) => {
+        state.activeExpenseCategoryLoading = true;
+      })
+      .addCase(fetchActiveExpenseCategory.fulfilled, (state, action) => {
+        state.activeExpenseCategoryLoading = false;
+        state.activeExpenseCategory = action.payload;
+      })
+      .addCase(fetchActiveExpenseCategory.rejected, (state) => {
+        state.activeExpenseCategoryLoading = false;
+      })
+      // * Get All Income
+      .addCase(fetchActiveIncomeCategory.pending, (state) => {
+        state.activeIncomeCategoryLoading = true;
+      })
+      .addCase(fetchActiveIncomeCategory.fulfilled, (state, action) => {
+        state.activeIncomeCategoryLoading = false;
+        state.activeIncomeCategory = action.payload;
+      })
+      .addCase(fetchActiveIncomeCategory.rejected, (state) => {
+        state.activeIncomeCategoryLoading = false;
       })
       // * Fetch by ID cases
       .addCase(fetchCategoryById.pending, (state) => {

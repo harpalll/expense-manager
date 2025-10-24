@@ -9,6 +9,16 @@ const PeopleProfile = lazy(() => import("../pages/protected/PeopleProfile.js"));
 const Dashboard = lazy(() =>
   import("../pages/protected/people/PeopleDashboard.js")
 );
+
+// * Expense Routes
+const Expense = lazy(() => import("../pages/protected/people/Expense.js"));
+const AddExpense = lazy(() =>
+  import("../features/peopleSide/expense/components/AddExpense.jsx")
+);
+const EditExpense = lazy(() =>
+  import("../features/peopleSide/expense/components/EditExpense.jsx")
+);
+
 // * Category Routes
 const Category = lazy(() => import("../pages/protected/Category.js"));
 
@@ -22,15 +32,18 @@ const routes = [
     path: "/people-profile",
     component: PeopleProfile,
   },
-  // category routes
+  // expense routes
   {
-    path: "/category",
-    component: Category,
+    path: "/expense",
+    component: Expense,
   },
-  // sub-category routes
   {
-    path: "/sub-category",
-    component: Category,
+    path: "/expense/add",
+    component: AddExpense,
+  },
+  {
+    path: "/expense/edit/:expenseId",
+    component: EditExpense,
   },
   {
     path: "/404",

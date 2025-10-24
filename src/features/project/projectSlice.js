@@ -68,6 +68,19 @@ export const toggleProjectStatus = createAsyncThunk(
   }
 );
 
+export const fetchActiveProject = createAsyncThunk(
+  "/project/active",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`api/Project/active`);
+      return response.data.data;
+    } catch (err) {
+      if (err.response) return rejectWithValue(err.response.data.message);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "project",
   initialState: {
@@ -77,6 +90,8 @@ const projectSlice = createSlice({
     projectDetails: null,
     detailsLoading: false,
     toggleLoading: false,
+    activeProject: [],
+    activeProjectLoading: false,
   },
   reducers: {
     clearprojectDetails: (state) => {
@@ -97,6 +112,17 @@ const projectSlice = createSlice({
       .addCase(fetchProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || action.error.message;
+      })
+      // * Get All active
+      .addCase(fetchActiveProject.pending, (state) => {
+        state.activeProjectLoading = true;
+      })
+      .addCase(fetchActiveProject.fulfilled, (state, action) => {
+        state.activeProjectLoading = false;
+        state.activeProject = action.payload;
+      })
+      .addCase(fetchActiveProject.rejected, (state) => {
+        state.activeProjectLoading = false;
       })
       // * Fetch by ID cases
       .addCase(fetchProjectById.pending, (state) => {

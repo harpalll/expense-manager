@@ -32,6 +32,24 @@ const EditProject = lazy(() =>
   import("../features/project/components/EditProject.jsx")
 );
 
+// * Expense Routes
+const Expense = lazy(() => import("../pages/protected/Expense.js"));
+// const AddExpense = lazy(() =>
+//   import("../features/expense/components/AddExpense.jsx")
+// );
+const EditExpense = lazy(() =>
+  import("../features/expense/components/EditExpense.jsx")
+);
+
+// * Income Routes
+const Income = lazy(() => import("../pages/protected/Income.js"));
+// const AddExpense = lazy(() =>
+//   import("../features/expense/components/AddExpense.jsx")
+// );
+// const EditExpense = lazy(() =>
+//   import("../features/expense/components/EditExpense.jsx")
+// );
+
 const Calendar = lazy(() => import("../pages/protected/Calendar"));
 const Team = lazy(() => import("../pages/protected/Team"));
 const Transactions = lazy(() => import("../pages/protected/Transactions"));
@@ -84,6 +102,24 @@ const routes = [
   {
     path: "/project/edit/:projectId",
     component: EditProject,
+  },
+  // expense routes
+  {
+    path: "/expense",
+    component: Expense,
+  },
+  // {
+  //   path: "/expense/add",
+  //   component: AddExpense,
+  // },
+  {
+    path: "/expense/edit/:expenseId",
+    component: EditExpense,
+  },
+  // income routes
+  {
+    path: "/income",
+    component: Income,
   },
   {
     path: "/settings-team",

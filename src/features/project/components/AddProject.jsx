@@ -65,6 +65,11 @@ const AddPeople = () => {
                   required: "Name is required",
                 })}
               />
+              {errors.projectName && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.projectName.message}
+                </p>
+              )}
             </div>
           </div>
           <div className="divider"></div>

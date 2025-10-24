@@ -4,8 +4,8 @@ import UserIcon from "@heroicons/react/24/outline/UserIcon";
 import CubeIcon from "@heroicons/react/24/outline/CubeIcon";
 import CubeTransparentIcon from "@heroicons/react/24/outline/CubeTransparentIcon";
 import ChartBarIcon from "@heroicons/react/24/outline/ChartBarIcon";
-import CurrencyDollarIcon from "@heroicons/react/24/outline/CurrencyDollarIcon";
-import CurrencyEuroIcon from "@heroicons/react/24/outline/CurrencyEuroIcon";
+import CreditCardIcon from "@heroicons/react/24/outline/CreditCardIcon";
+import BanknotesIcon from "@heroicons/react/24/outline/BanknotesIcon";
 
 const iconClasses = `h-6 w-6`;
 
@@ -15,25 +15,25 @@ const routes = [
     icon: <Squares2X2Icon className={iconClasses} />, // icon component
     name: "Dashboard", // name that appear in Sidebar
   },
-  {
-    path: "/people/category",
-    icon: <CubeIcon className={iconClasses} />,
-    name: "Category",
-  },
-  {
-    path: "/people/sub-category",
-    icon: <CubeTransparentIcon className={iconClasses} />,
-    name: "Sub Category",
-  },
+  // {
+  //   path: "/people/category",
+  //   icon: <CubeIcon className={iconClasses} />,
+  //   name: "Category",
+  // },
+  // {
+  //   path: "/people/sub-category",
+  //   icon: <CubeTransparentIcon className={iconClasses} />,
+  //   name: "Sub Category",
+  // },
   {
     path: "/people/expense",
-    icon: <CurrencyDollarIcon className={iconClasses} />,
-    name: "Expenses",
+    icon: <CreditCardIcon className={iconClasses} />,
+    name: "Expense",
   },
   {
-    path: "/people/incomes",
-    icon: <CurrencyEuroIcon className={iconClasses} />,
-    name: "Expenses",
+    path: "/people/income",
+    icon: <BanknotesIcon className={iconClasses} />,
+    name: "Income",
   },
   {
     path: "/people/charts",
