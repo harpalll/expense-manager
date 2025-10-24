@@ -18,10 +18,13 @@ function AdminProfile() {
   const [formLoading, setFormLoading] = useState(false);
   const { user, loading, error } = useSelector((state) => state.auth);
   const { adminDetails, detailsLoading } = useSelector((state) => state.admin);
+  const [preview, setPreview] = useState(null);
+
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -46,6 +49,18 @@ function AdminProfile() {
     }
   }, [adminDetails, setValue]);
 
+  useEffect(() => {
+    if (!watch("profileImage")?.[0]) {
+      setPreview(null);
+      return;
+    }
+    const file = watch("profileImage")[0];
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [watch("profileImage")]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -58,9 +73,18 @@ function AdminProfile() {
   const onSubmit = async (data) => {
     setFormLoading(true);
     try {
-      const response = await axios.patch("/api/User/Profile", {
-        userName: data.userName,
-        mobileNo: data.mobileNo,
+      const formData = new FormData();
+      formData.append("userName", data.userName);
+      formData.append("mobileNo", data.mobileNo);
+
+      if (data.profileImage && data.profileImage[0]) {
+        formData.append("profileImage", data.profileImage[0]);
+      }
+
+      const response = await axios.patch("/api/User/Profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       toast.success("Profile Updated Successfully.");
       dispatch(fetchUserInfo());
@@ -108,52 +132,99 @@ function AdminProfile() {
               <>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="mb-4">
-                    <div className="form-control w-full">
+                    <div className="form-control w-full mt-4">
+                      {/* preview */}
+                      {adminDetails?.profileImage && (
+                        <div className="mt-3">
+                          <p className="text-sm mb-1">Current Image:</p>
+                          <img
+                            src={adminDetails.profileImage}
+                            alt="Profile"
+                            className="w-24 h-24 rounded-full border object-cover"
+                          />
+                        </div>
+                      )}
                       <label className="label">
-                        <span
-                          className={"label-text text-base-content required"}
-                        >
-                          Name
+                        <span className="label-text required">
+                          Profile Image
                         </span>
                       </label>
                       <input
-                        type="text"
-                        className="input input-bordered w-full"
-                        {...register("userName", {
-                          required: "Name is required",
+                        type="file"
+                        accept="image/*"
+                        className="file-input file-input-bordered w-full"
+                        {...register("profileImage", {
+                          required: adminDetails?.profileImage
+                            ? false
+                            : "Profile image is required",
                         })}
                       />
-                      {errors.userName && (
+                      {errors.profileImage && (
                         <p className="text-red-500 text-sm mt-2">
-                          {errors.userName.message}
+                          {errors.profileImage.message}
                         </p>
                       )}
                     </div>
 
-                    <div className="form-control w-full mt-4">
-                      <label className="label">
-                        <span
-                          className={"label-text text-base-content required"}
-                        >
-                          Mobile Number
-                        </span>
-                      </label>
-                      <input
-                        type="text"
-                        className="input input-bordered w-full"
-                        {...register("mobileNo", {
-                          required: "Mobile Number is required",
-                          pattern: {
-                            value: /^[\d]{10}$/,
-                            message: "Please enter a valid mobile number",
-                          },
-                        })}
-                      />
-                      {errors.mobileNo && (
-                        <p className="text-red-500 text-sm mt-2">
-                          {errors.mobileNo.message}
-                        </p>
-                      )}
+                    {preview && (
+                      <div className="mt-3">
+                        <p className="text-sm mb-1">Preview:</p>
+                        <img
+                          src={preview}
+                          alt="Preview"
+                          className="w-24 h-24 rounded-full border object-cover"
+                        />
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="form-control w-full mt-4">
+                        <label className="label">
+                          <span
+                            className={"label-text text-base-content required"}
+                          >
+                            Name
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full"
+                          {...register("userName", {
+                            required: "Name is required",
+                          })}
+                        />
+                        {errors.userName && (
+                          <p className="text-red-500 text-sm mt-2">
+                            {errors.userName.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="form-control w-full mt-4">
+                        <label className="label">
+                          <span
+                            className={"label-text text-base-content required"}
+                          >
+                            Mobile Number
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full"
+                          {...register("mobileNo", {
+                            required: "Mobile Number is required",
+                            pattern: {
+                              value: /^[\d]{10}$/,
+                              message: "Please enter a valid mobile number",
+                            },
+                          })}
+                        />
+                        {errors.mobileNo && (
+                          <p className="text-red-500 text-sm mt-2">
+                            {errors.mobileNo.message}
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     <div className="mt-16">
