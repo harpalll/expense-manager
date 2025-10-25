@@ -6,21 +6,21 @@ import { fetchCategory } from "../categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function AddEditCategoryModal({ extraObject, closeModal }) {
-const [loading, setLoading] = useState(false);
-const { mode } = extraObject || {}; // mode: 'add' | 'edit'
-const dispatch = useDispatch();
-const { categoryDetails, detailsLoading } = useSelector(
-  (state) => state.category
-);
-const {
-  register,
-  handleSubmit,
-  setValue,
-  formState: { errors },
-} = useForm();
+  const [loading, setLoading] = useState(false);
+  const { mode } = extraObject || {}; // mode: 'add' | 'edit'
+  const dispatch = useDispatch();
+  const { categoryDetails, detailsLoading } = useSelector(
+    (state) => state.category
+  );
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
 
-const categoryData =
-  mode === "edit" ? categoryDetails || extraObject.categoryData : null;
+  const categoryData =
+    mode === "edit" ? categoryDetails || extraObject.categoryData : null;
 
   useEffect(() => {
     if (mode === "edit" && categoryData) {
@@ -45,6 +45,14 @@ const categoryData =
       closeModal();
       dispatch(fetchCategory());
     } catch (error) {
+      if (error.response.status === 400) {
+        const errors = error.response.data.errors;
+        for (const key in errors) {
+          errors[key].forEach((message) => {
+            toast.error(message);
+          });
+        }
+      }
       toast.error("Something went wrong!");
       console.error(error);
     } finally {

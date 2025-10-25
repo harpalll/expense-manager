@@ -70,7 +70,15 @@ function PeopleProfile() {
       dispatch(fetchUserInfo());
     } catch (error) {
       if (error.response) {
-        toast.error(`ERROR: ${error.response.data.message}`);
+        if (error.response.status === 400) {
+          const errors = error.response.data.errors;
+          for (const key in errors) {
+            errors[key].forEach((message) => {
+              toast.error(message);
+            });
+          }
+        }
+        // toast.error(`ERROR: ${error.response.data.message}`);
         console.error(
           `ERROR: Status Code: ${error.response.status} || ERRORS:`,
           error.response.data

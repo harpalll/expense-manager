@@ -45,6 +45,14 @@ function EditPeopleModal({ closeModal }) {
       closeModal();
       dispatch(fetchPeople());
     } catch (error) {
+      if (error.response.status === 400) {
+        const errors = error.response.data.errors;
+        for (const key in errors) {
+          errors[key].forEach((message) => {
+            toast.error(message);
+          });
+        }
+      }
       toast.error("Something went wrong!");
       console.error(error);
     } finally {
