@@ -32,8 +32,6 @@ export const fetchExpenseById = createAsyncThunk(
   async (expenseId, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/Expense/${expenseId}`);
-      console.log(response.data.data);
-
       return response.data.data;
     } catch (error) {
       if (error.response) {

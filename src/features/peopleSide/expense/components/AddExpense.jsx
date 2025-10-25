@@ -217,7 +217,9 @@ const AddExpense = () => {
           <div className="grid grid-cols-1 gap-6">
             <div className="form-control w-full mt-4">
               <label className="label">
-                <span className={"label-text text-base-content"}>Amount</span>
+                <span className={"label-text text-base-content required"}>
+                  Amount
+                </span>
               </label>
               <input
                 type="text"

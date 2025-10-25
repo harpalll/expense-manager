@@ -9,6 +9,7 @@ import { fetchActiveExpenseCategory } from "../../../category/categorySlice";
 import { fetchActiveExpenseSubCategory } from "../../../subCategory/subCategorySlice";
 import { useParams } from "react-router-dom";
 import { fetchExpenseById } from "../../../expense/expenseSlice";
+import SuspenseContent from "../../../../containers/SuspenseContent";
 
 const EditExpense = () => {
   const { expenseId } = useParams();
@@ -44,7 +45,6 @@ const EditExpense = () => {
 
   useEffect(() => {
     dispatch(fetchExpenseById(expenseId));
-    console.log(expenseDetails);
   }, []);
 
   useEffect(() => {
@@ -66,8 +66,8 @@ const EditExpense = () => {
         return `${year}-${month}-${day}`;
       };
 
-      const formattedExpenseDate = formatDate(expenseDetails.ExpenseDate);
-      console.log(formattedExpenseDate);
+      const formattedExpenseDate = formatDate(expenseDetails.expenseDate);
+      setValue("ExpenseDate", formattedExpenseDate);
 
       const selectedCategoryFromDB = activeExpenseCategory.find(
         (c) => c.categoryID === expenseDetails.categoryID
@@ -85,11 +85,13 @@ const EditExpense = () => {
       setSelectedSubCategory(selectedSubCategoryFromDB);
       setSelectedProject(selectedProjectFromDB);
 
-      setValue("Amount", expenseDetails.Amount);
-      setValue("ExpenseDetail", expenseDetails.ExpenseDetail);
-      setValue("ExpenseDate", formattedExpenseDate);
-      setValue("projectDetail", expenseDetails.projectDetail);
-      setValue("Description", expenseDetails.Description);
+      setValue("CategoryID", expenseDetails.categoryID);
+      setValue("SubCategoryID", expenseDetails.subCategoryID);
+      setValue("ProjectID", expenseDetails.projectID);
+
+      setValue("Amount", expenseDetails.amount);
+      setValue("ExpenseDetail", expenseDetails.expenseDetail);
+      setValue("Description", expenseDetails.description);
     }
   }, [expenseDetails, setValue]);
 
@@ -114,7 +116,9 @@ const EditExpense = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchActiveExpenseSubCategory(expenseDetails.CategoryID));
+    if (expenseDetails) {
+      dispatch(fetchActiveExpenseSubCategory(expenseDetails.categoryID));
+    }
   }, []);
 
   const onSubmit = async (data) => {
@@ -127,8 +131,7 @@ const EditExpense = () => {
       formData.append("ProjectID", data.ProjectID);
       formData.append("Amount", data.Amount);
       formData.append("ExpenseDetail", data.ExpenseDetail);
-      //   formData.append("AttachmentPath", data.AttachmentPath);
-      formData.append("Description", data.description);
+      formData.append("Description", data.Description);
 
       if (data.AttachmentPath && data.AttachmentPath[0]) {
         formData.append("AttachmentPath", data.AttachmentPath[0]);
@@ -169,219 +172,231 @@ const EditExpense = () => {
   return (
     <>
       <TitleCard title="Edit Expense" topMargin="mt-2">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 gap-6">
-            <div className="form-control w-full mt-4">
-              <label className="label">
-                <span className={"label-text text-base-content required"}>
-                  Expense Date
-                </span>
-              </label>
-              <input
-                type="date"
-                className="input input-bordered w-full"
-                {...register("ExpenseDate", {
-                  required: "Expense Date is required",
-                })}
-              />
-              {errors.ExpenseDate && (
-                <p className="text-red-500 text-sm mt-2">
-                  {errors.ExpenseDate.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="divider"></div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="form-control w-full mt-4">
-              {activeExpenseCategoryLoading ? (
-                <>
-                  <span className="loading loading-ball loading-sm"></span>
-                  loading categories..
-                </>
-              ) : (
-                <>
+        {detailsLoading ? (
+          <>
+            <SuspenseContent />
+          </>
+        ) : (
+          <>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1 gap-6">
+                <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className="label-text">Select Category</span>
+                    <span className={"label-text text-base-content required"}>
+                      Expense Date
+                    </span>
                   </label>
-                  <select
-                    {...register("CategoryID")}
-                    className="select select-bordered w-full"
-                    onChange={(e) => {
-                      dispatch(fetchActiveExpenseSubCategory(e.target.value));
-                      // setValue("isExpense", selected.isExpense);
-                      // setValue("isIncome", selected.isIncome);
-                    }}
-                  >
-                    <option value="">-- Select Category --</option>
-                    {activeExpenseCategory?.map((cat) => (
-                      <option key={cat.categoryID} value={cat.categoryID}>
-                        {cat.categoryName}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              )}
-            </div>
+                  <input
+                    type="date"
+                    className="input input-bordered w-full"
+                    {...register("ExpenseDate", {
+                      required: "Expense Date is required",
+                    })}
+                  />
+                  {errors.ExpenseDate && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.ExpenseDate.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="divider"></div>
 
-            <div className="form-control w-full mt-4">
-              {activeExpenseSubCategoryLoading ? (
-                <>
-                  <span className="loading loading-ball loading-sm"></span>
-                  loading sub-categories..
-                </>
-              ) : (
-                <>
-                  <label className="label">
-                    <span className="label-text">Select Sub Category</span>
-                  </label>
-                  <select
-                    {...register("SubCategoryID")}
-                    className="select select-bordered w-full"
-                  >
-                    <option value="">-- Select Sub Category --</option>
-                    {activeExpenseSubCategory?.map((subCat) => (
-                      <option
-                        key={subCat.subCategoryID}
-                        value={subCat.subCategoryID}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="form-control w-full mt-4">
+                  {activeExpenseCategoryLoading ? (
+                    <>
+                      <span className="loading loading-ball loading-sm"></span>
+                      loading categories..
+                    </>
+                  ) : (
+                    <>
+                      <label className="label">
+                        <span className="label-text">Select Category</span>
+                      </label>
+                      <select
+                        {...register("CategoryID")}
+                        className="select select-bordered w-full"
+                        onChange={(e) => {
+                          dispatch(
+                            fetchActiveExpenseSubCategory(e.target.value)
+                          );
+                          // setValue("isExpense", selected.isExpense);
+                          // setValue("isIncome", selected.isIncome);
+                        }}
                       >
-                        {subCat.subCategoryName}
+                        <option value="">-- Select Category --</option>
+                        {activeExpenseCategory?.map((cat) => (
+                          <option key={cat.categoryID} value={cat.categoryID}>
+                            {cat.categoryName}
+                          </option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+                </div>
+
+                <div className="form-control w-full mt-4">
+                  {activeExpenseSubCategoryLoading ? (
+                    <>
+                      <span className="loading loading-ball loading-sm"></span>
+                      loading sub-categories..
+                    </>
+                  ) : (
+                    <>
+                      <label className="label">
+                        <span className="label-text">Select Sub Category</span>
+                      </label>
+                      <select
+                        {...register("SubCategoryID")}
+                        className="select select-bordered w-full"
+                      >
+                        <option value="">-- Select Sub Category --</option>
+                        {activeExpenseSubCategory?.map((subCat) => (
+                          <option
+                            key={subCat.subCategoryID}
+                            value={subCat.subCategoryID}
+                          >
+                            {subCat.subCategoryName}
+                          </option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6">
+                <div className="form-control w-full mt-4">
+                  <label className="label">
+                    <span className="label-text">
+                      {activeProjectLoading
+                        ? "loading projects.."
+                        : "Select Project"}
+                    </span>
+                  </label>
+                  <select
+                    {...register("ProjectID")}
+                    className="select select-bordered w-full"
+                  >
+                    <option value="">-- Select Project --</option>
+                    {activeProject?.map((project) => (
+                      <option key={project.projectID} value={project.projectID}>
+                        {project.projectName}
                       </option>
                     ))}
                   </select>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6">
-            <div className="form-control w-full mt-4">
-              <label className="label">
-                <span className="label-text">
-                  {activeProjectLoading
-                    ? "loading projects.."
-                    : "Select Project"}
-                </span>
-              </label>
-              <select
-                {...register("ProjectID")}
-                className="select select-bordered w-full"
-              >
-                <option value="">-- Select Project --</option>
-                {activeProject?.map((project) => (
-                  <option key={project.projectID} value={project.projectID}>
-                    {project.projectName}
-                  </option>
-                ))}
-              </select>
-              {/* {errors.ProjectID && (
+                  {/* {errors.ProjectID && (
                 <p className="text-red-500 text-sm">
                   {errors.ProjectID.message}
                 </p>
               )} */}
-            </div>
-          </div>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 gap-6">
-            <div className="form-control w-full mt-4">
-              <label className="label">
-                <span className={"label-text text-base-content"}>Amount</span>
-              </label>
-              <input
-                type="text"
-                className="input input-bordered w-full"
-                {...register("Amount", {
-                  required: "Amount is required",
-                  pattern: {
-                    value: /^\d+(\.\d{1,2})?$/,
-                    message: "Please enter only numbers",
-                  },
-                })}
-              />
-              {errors.Amount && (
-                <p className="text-red-500 text-sm mt-2">
-                  {errors.Amount.message}
-                </p>
-              )}
-            </div>
-          </div>
+              <div className="grid grid-cols-1 gap-6">
+                <div className="form-control w-full mt-4">
+                  <label className="label">
+                    <span className={"label-text text-base-content required"}>
+                      Amount
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    className="input input-bordered w-full"
+                    {...register("Amount", {
+                      required: "Amount is required",
+                      pattern: {
+                        value: /^\d+(\.\d{1,2})?$/,
+                        message: "Please enter only numbers",
+                      },
+                    })}
+                  />
+                  {errors.Amount && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.Amount.message}
+                    </p>
+                  )}
+                </div>
+              </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="form-control w-full mt-4">
-              <label className="label">
-                <span className={"label-text text-base-content"}>
-                  ExpenseDetail
-                </span>
-              </label>
-              <textarea
-                className="textarea textarea-bordered w-full"
-                placeholder="demo"
-                {...register("ExpenseDetail")}
-                rows={3}
-              />
-            </div>
-
-            <div className="form-control w-full mt-4">
-              <label className="label">
-                <span className={"label-text text-base-content"}>
-                  Description
-                </span>
-              </label>
-              <textarea
-                className="textarea textarea-bordered w-full"
-                placeholder="demo"
-                {...register("description")}
-                rows={3}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6">
-            <div className="form-control w-full mt-4">
-              {/* preview */}
-              {expenseDetails?.AttachmentPath && (
-                <div className="mt-3">
-                  <p className="text-sm mb-1">Current Image:</p>
-                  <img
-                    src={expenseDetails.AttachmentPath}
-                    alt="Profile"
-                    className="w-24 h-24 rounded-full border object-cover"
+              <div className="grid grid-cols-2 gap-6">
+                <div className="form-control w-full mt-4">
+                  <label className="label">
+                    <span className={"label-text text-base-content"}>
+                      ExpenseDetail
+                    </span>
+                  </label>
+                  <textarea
+                    className="textarea textarea-bordered w-full"
+                    placeholder="demo"
+                    {...register("ExpenseDetail")}
+                    rows={3}
                   />
                 </div>
-              )}
-              <label className="label">
-                <span className="label-text required">Attachment</span>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                className="file-input file-input-bordered w-full"
-                {...register("AttachmentPath")}
-              />
-            </div>
-            {preview && (
-              <div className="mt-3">
-                <p className="text-sm mb-1">Preview:</p>
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="w-24 h-24 rounded-full border object-cover"
-                />
-              </div>
-            )}
-          </div>
 
-          <div className="mt-16">
-            <button className="btn btn-primary float-right" type="submit">
-              {loading ? (
-                <span className="loading loading-ball loading-md"></span>
-              ) : (
-                "Update"
-              )}
-            </button>
-          </div>
-        </form>
+                <div className="form-control w-full mt-4">
+                  <label className="label">
+                    <span className={"label-text text-base-content"}>
+                      Description
+                    </span>
+                  </label>
+                  <textarea
+                    className="textarea textarea-bordered w-full"
+                    placeholder="demo"
+                    {...register("Description")}
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6">
+                <div className="form-control w-full mt-4">
+                  {/* preview */}
+                  {expenseDetails?.attachmentPath && (
+                    <div className="mt-3">
+                      <p className="text-sm mb-1">Current Image:</p>
+                      <img
+                        src={expenseDetails.attachmentPath}
+                        alt="Profile"
+                        className="w-24 h-24 rounded-full border object-cover"
+                      />
+                    </div>
+                  )}
+                  <label className="label">
+                    <span className="label-text required">Attachment</span>
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="file-input file-input-bordered w-full"
+                    {...register("AttachmentPath")}
+                  />
+                </div>
+                {preview && (
+                  <div className="mt-3">
+                    <p className="text-sm mb-1">Preview:</p>
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="w-24 h-24 rounded-full border object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-16">
+                <button className="btn btn-primary float-right" type="submit">
+                  {loading ? (
+                    <span className="loading loading-ball loading-md"></span>
+                  ) : (
+                    "Update"
+                  )}
+                </button>
+              </div>
+            </form>
+          </>
+        )}
       </TitleCard>
     </>
   );
