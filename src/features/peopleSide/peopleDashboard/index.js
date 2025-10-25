@@ -55,6 +55,8 @@ function Dashboard() {
       hasLink: true,
       link: "/people/expense",
       linkName: "View Expense",
+      showReport: true,
+      showExcel: true,
     },
     {
       title: "Total Income",
@@ -64,6 +66,8 @@ function Dashboard() {
       hasLink: true,
       link: "/people/income",
       linkName: "View Income",
+      showReport: true,
+      showExcel: true,
     },
   ];
 

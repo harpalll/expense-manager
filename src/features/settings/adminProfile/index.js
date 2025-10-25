@@ -90,6 +90,15 @@ function AdminProfile() {
       dispatch(fetchUserInfo());
     } catch (error) {
       if (error.response) {
+        if (error.response.status === 400) {
+          const errors = error.response.data.errors;
+          for (const key in errors) {
+            errors[key].forEach((message) => {
+              toast.error(message);
+            });
+          }
+        }
+
         toast.error(`ERROR: ${error.response.data.message}`);
         console.error(
           `ERROR: Status Code: ${error.response.status} || ERRORS:`,
@@ -132,8 +141,58 @@ function AdminProfile() {
               <>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="mb-4">
-                    <div className="form-control w-full mt-4">
-                      {/* preview */}
+                    <div className="w-full flex flex-col items-center justify-center mt-6 relative">
+                      <div className="relative">
+                        <img
+                          src={
+                            preview ||
+                            adminDetails?.profileImage ||
+                            "/default-avatar.png"
+                          }
+                          alt="Profile"
+                          className="w-40 h-40 rounded-full border-4 border-primary object-cover shadow-md"
+                        />
+                        <label
+                          htmlFor="profileImageInput"
+                          className="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full cursor-pointer shadow-md hover:scale-105 transition-transform"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M15.232 5.232l3.536 3.536M9 11l6.586-6.586a2 2 0 112.828 2.828L11.828 13.83a2 2 0 01-.878.515l-4.243 1.06a.5.5 0 01-.606-.606l1.06-4.243a2 2 0 01.515-.878z"
+                            />
+                          </svg>
+                        </label>
+                      </div>
+
+                      <input
+                        id="profileImageInput"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        {...register("profileImage", {
+                          required: adminDetails?.profileImage
+                            ? false
+                            : "Profile image is required",
+                        })}
+                      />
+
+                      {errors.profileImage && (
+                        <p className="text-red-500 text-sm mt-2">
+                          {errors.profileImage.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* <div className="form-control w-full mt-4">
                       {adminDetails?.profileImage && (
                         <div className="mt-3">
                           <p className="text-sm mb-1">Current Image:</p>
@@ -175,7 +234,7 @@ function AdminProfile() {
                           className="w-24 h-24 rounded-full border object-cover"
                         />
                       </div>
-                    )}
+                    )} */}
 
                     <div className="grid grid-cols-2 gap-6">
                       <div className="form-control w-full mt-4">

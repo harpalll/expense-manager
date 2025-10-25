@@ -158,28 +158,41 @@ const Actions = ({ category }) => {
 
 // * table columns definition
 const columns = [
-  { accessorKey: "categoryID", header: "Id", sortingFn: "alphanumeric" },
-  { accessorKey: "categoryName", header: "Name" },
+  {
+    accessorKey: "categoryID",
+    header: "Id",
+    sortingFn: "alphanumeric",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "categoryName",
+    header: "Name",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "isExpense",
     header: "Expense",
-    cell: ({ getValue }) => getBadgeForExpense(getValue()),
+    cell: ({ getValue }) => getBadgeForExpense(getValue()) || "-",
   },
   {
     accessorKey: "isIncome",
     header: "Income",
-    cell: ({ getValue }) => getBadgeForIncome(getValue()),
+    cell: ({ getValue }) => getBadgeForIncome(getValue()) || "-",
   },
-  { accessorKey: "description", header: "Description" },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ getValue }) => getStatusBadge(getValue()),
+    cell: ({ getValue }) => getStatusBadge(getValue()) || "-",
   },
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <Actions category={row.original} />,
+    cell: ({ row }) => <Actions category={row.original} /> || "-",
     enableSorting: false,
   },
 ];

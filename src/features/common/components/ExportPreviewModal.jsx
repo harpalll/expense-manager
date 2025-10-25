@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 const ExcelPreviewModal = ({ extraObject, closeModal }) => {
   const [previewData, setPreviewData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [exportloading, setExportLoading] = useState(false);
   const { type } = extraObject || {}; // type: 'Expense' | 'Income'
 
   const apiUrl =
@@ -60,6 +61,7 @@ const ExcelPreviewModal = ({ extraObject, closeModal }) => {
   }, []);
 
   const handleDownload = async () => {
+    setExportLoading(true);
     try {
       const res = await axios.get(apiUrl, {
         responseType: "blob",
@@ -88,6 +90,8 @@ const ExcelPreviewModal = ({ extraObject, closeModal }) => {
     } catch (error) {
       console.error(error);
       toast.error("Download failed");
+    } finally {
+      setExportLoading(false);
     }
   };
 
@@ -132,7 +136,7 @@ const ExcelPreviewModal = ({ extraObject, closeModal }) => {
                 onClick={handleDownload}
                 className="btn btn-primary btn-sm"
               >
-                Download Full Excel
+                {exportloading ? "Downloading..." : "Download Full Excel"}
               </button>
             </div>
           </>

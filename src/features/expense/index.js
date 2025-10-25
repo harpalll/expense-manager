@@ -41,27 +41,56 @@ const formatDate = (expenseDate) => {
 
 // * table columns definition
 const columns = [
-  { accessorKey: "expenseID", header: "Id", sortingFn: "alphanumeric" },
+  {
+    accessorKey: "expenseID",
+    header: "Id",
+    sortingFn: "alphanumeric",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "expenseDate",
     header: "Date",
-    cell: ({ getValue }) => formatDate(getValue()),
+    cell: ({ getValue }) => formatDate(getValue()) || "-",
   },
-  { accessorKey: "categoryName", header: "Category" },
-  { accessorKey: "subCategoryName", header: "Sub Category" },
-  { accessorKey: "projectName", header: "Project" },
-  { accessorKey: "amount", header: "Amount" },
-  { accessorKey: "expenseDetail", header: "Detail" },
-  { accessorKey: "description", header: "Description" },
+  {
+    accessorKey: "categoryName",
+    header: "Category",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "subCategoryName",
+    header: "Sub Category",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "projectName",
+    header: "Project",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "expenseDetail",
+    header: "Detail",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "attachmentPath",
     header: "Attachment",
-    cell: ({ getValue }) => renderImage(getValue()),
+    cell: ({ getValue }) => renderImage(getValue()) || "-",
   },
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ getValue }) => getStatusBadge(getValue()),
+    cell: ({ getValue }) => getStatusBadge(getValue()) || "-",
   },
   // {
   //   accessorKey: "actions",
@@ -86,87 +115,6 @@ const renderImage = (attachmentPath) => {
       alt="Attachment"
       className="w-16 h-16 rounded-full border object-cover"
     />
-  );
-};
-
-const Actions = ({ expense }) => {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleDelete = () => {
-    dispatch(
-      openModal({
-        bodyType: "CONFIRMATION_MODAL",
-        extraObject: {
-          message: `Are you sure you want to delete ${expense.expenseDetail}?`,
-          onConfirm: async () => {
-            dispatch(deleteExpense(expense.expenseID))
-              .unwrap()
-              .then(() => dispatch(fetchExpense()))
-              .catch((err) => console.error(err));
-          },
-        },
-      })
-    );
-  };
-
-  //   const handleEdit = (expenseId) => {
-  //     try {
-  //       dispatch(
-  //         openModal({
-  //           title: "Edit People",
-  //           bodyType: MODAL_BODY_TYPES.EDIT_PEOPLE,
-  //         })
-  //       );
-  //       dispatch(fetchPeopleById(expenseId));
-  //     } catch (error) {
-  //       console.error("Failed to fetch people:", error);
-  //     }
-  //   };
-
-  return (
-    <div className="relative inline-block" ref={ref}>
-      <button
-        className="btn btn-ghost btn-sm btn-square normal-case"
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        <EllipsisVerticalIcon className="w-5 h-5" />
-      </button>
-
-      {open && (
-        <ul className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded z-50 menu p-2">
-          <li>
-            <Link
-              to={`/admin/expense/edit/${expense.expenseID}`}
-              className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 normal-case text-gray-800 dark:text-gray-100"
-            >
-              <PencilIcon className="w-4 h-4 mr-2" />
-              Edit
-            </Link>
-          </li>
-          <li>
-            <button
-              className="flex items-center gap-2 px-4 py-2 w-full text-left  hover:bg-gray-100 dark:hover:bg-gray-700 normal-case text-gray-800 dark:text-gray-100"
-              onClick={handleDelete}
-            >
-              <TrashIcon className="w-4 h-4" />
-              Delete
-            </button>
-          </li>
-        </ul>
-      )}
-    </div>
   );
 };
 

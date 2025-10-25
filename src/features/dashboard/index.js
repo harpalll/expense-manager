@@ -21,7 +21,7 @@ function Dashboard() {
   const dispatch = useDispatch();
   const [totalExpense, setTotalExpense] = useState(null);
   const [totalIncome, setTotalIncome] = useState(null);
-  const [totalPeople, setTotalPeople] = useState(null);
+  const [totalActivePeople, setTotalActivePeople] = useState(null);
 
   const fetchTotalExpenseIncome = async () => {
     try {
@@ -33,10 +33,10 @@ function Dashboard() {
     }
   };
 
-  const fetchTotalUsers = async () => {
+  const fetchTotalActiveUsers = async () => {
     try {
-      const res = await axios.get("api/People");
-      setTotalPeople(res.data.data);
+      const res = await axios.get("api/People/Count");
+      setTotalActivePeople(res.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +47,7 @@ function Dashboard() {
     const fetchStats = async () => {
       try {
         await fetchTotalExpenseIncome();
-        await fetchTotalUsers();
+        await fetchTotalActiveUsers();
       } catch (error) {
       } finally {
         setLoading(false);
@@ -58,13 +58,15 @@ function Dashboard() {
 
   const statsData = [
     {
-      title: "People",
-      value: totalPeople?.length,
+      title: "Active People",
+      value: totalActivePeople,
       icon: <UsersIcon className="w-8 h-8" />,
-      description: "Total Users",
+      description: "Active People",
       hasLink: true,
       link: "/admin/people",
       linkName: "View People",
+      showReport: false,
+      showExcel: false,
     },
     {
       title: "Total Expense",
@@ -74,6 +76,8 @@ function Dashboard() {
       hasLink: true,
       link: "/admin/expense",
       linkName: "View Expense",
+      showReport: true,
+      showExcel: true,
     },
     {
       title: "Total Income",
@@ -83,6 +87,8 @@ function Dashboard() {
       hasLink: true,
       link: "/admin/income",
       linkName: "View Income",
+      showReport: true,
+      showExcel: true,
     },
   ];
 

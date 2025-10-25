@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -11,6 +11,8 @@ const ReportModal = ({ extraObject, closeModal }) => {
     new Date().toISOString().split("T")[0]
   );
   const [loading, setLoading] = useState(false);
+  const [activeRange, setActiveRange] = useState(null); // "month" | "year" | null
+  const isProgrammaticChange = useRef(false);
 
   const formatDateForInput = (date) => {
     const year = date.getFullYear();
@@ -24,8 +26,10 @@ const ReportModal = ({ extraObject, closeModal }) => {
     const start = new Date(now.getFullYear(), now.getMonth(), 1);
     const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
+    isProgrammaticChange.current = true;
     setStartDate(formatDateForInput(start));
     setEndDate(formatDateForInput(end));
+    setActiveRange("month");
   };
 
   const handleThisYear = () => {
@@ -33,8 +37,22 @@ const ReportModal = ({ extraObject, closeModal }) => {
     const start = new Date(now.getFullYear(), 0, 1);
     const end = new Date(now.getFullYear(), 11, 31);
 
+    isProgrammaticChange.current = true;
     setStartDate(formatDateForInput(start));
     setEndDate(formatDateForInput(end));
+    setActiveRange("year");
+  };
+
+  const handleManualChange = (setter) => (e) => {
+    if (isProgrammaticChange.current) {
+      isProgrammaticChange.current = false;
+    }
+
+    setter(e.target.value);
+    if (!isProgrammaticChange.current) {
+      setActiveRange(null);
+    }
+    // isProgrammaticChange.current = false;
   };
 
   const handleGenerateReport = async () => {
@@ -42,7 +60,7 @@ const ReportModal = ({ extraObject, closeModal }) => {
       toast.error("End Date cannot be before Start Date");
       return;
     }
-    
+
     setLoading(true);
     try {
       const apiUrl =
@@ -88,7 +106,7 @@ const ReportModal = ({ extraObject, closeModal }) => {
             type="date"
             className="input input-bordered w-full"
             value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            onChange={handleManualChange(setStartDate)}
           />
         </div>
 
@@ -100,15 +118,25 @@ const ReportModal = ({ extraObject, closeModal }) => {
             type="date"
             className="input input-bordered w-full"
             value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+            onChange={handleManualChange(setEndDate)}
           />
         </div>
 
         <div className="flex gap-2">
-          <button onClick={handleThisMonth} className="btn btn-outline btn-sm">
+          <button
+            onClick={handleThisMonth}
+            className={`btn btn-sm ${
+              activeRange === "month" ? "btn-primary" : "btn-outline"
+            }`}
+          >
             This Month
           </button>
-          <button onClick={handleThisYear} className="btn btn-outline btn-sm">
+          <button
+            onClick={handleThisYear}
+            className={`btn btn-sm ${
+              activeRange === "year" ? "btn-primary" : "btn-outline"
+            }`}
+          >
             This Year
           </button>
         </div>
@@ -121,7 +149,11 @@ const ReportModal = ({ extraObject, closeModal }) => {
           >
             {loading ? "Generating..." : "Generate Report"}
           </button>
-          <button onClick={closeModal} className="btn btn-ghost btn-sm">
+          <button
+            onClick={closeModal}
+            className="btn btn-ghost btn-sm"
+            disabled={loading}
+          >
             Close
           </button>
         </div>

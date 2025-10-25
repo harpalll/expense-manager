@@ -23,6 +23,8 @@ import {
   fetchIncomeById,
   deleteIncome,
 } from "../../income/incomeSlice.js";
+import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import { MODAL_BODY_TYPES } from "../../../utils/globalConstantUtil.js";
 
 //   ? converts date format
 const formatDate = (incomeDate) => {
@@ -39,33 +41,62 @@ const formatDate = (incomeDate) => {
 
 // * table columns definition
 const columns = [
-  { accessorKey: "incomeID", header: "Id", sortingFn: "alphanumeric" },
+  {
+    accessorKey: "incomeID",
+    header: "Id",
+    sortingFn: "alphanumeric",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "incomeDate",
     header: "Date",
-    cell: ({ getValue }) => formatDate(getValue()),
+    cell: ({ getValue }) => formatDate(getValue()) || "-",
   },
-  { accessorKey: "categoryName", header: "Category" },
-  { accessorKey: "subCategoryName", header: "Sub Category" },
-  { accessorKey: "projectName", header: "Project" },
-  { accessorKey: "amount", header: "Amount" },
-  { accessorKey: "incomeDetail", header: "Detail" },
-  { accessorKey: "description", header: "Description" },
+  {
+    accessorKey: "categoryName",
+    header: "Category",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "subCategoryName",
+    header: "Sub Category",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "projectName",
+    header: "Project",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "incomeDetail",
+    header: "Detail",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "attachmentPath",
     header: "Attachment",
-    cell: ({ getValue }) => renderImage(getValue()),
+    cell: ({ getValue }) => renderImage(getValue()) || "-",
     enableSorting: false,
   },
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ getValue }) => getStatusBadge(getValue()),
+    cell: ({ getValue }) => getStatusBadge(getValue()) || "-",
   },
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <Actions income={row.original} />,
+    cell: ({ row }) => <Actions income={row.original} /> || "-",
     enableSorting: false,
   },
 ];
@@ -182,9 +213,29 @@ function Income() {
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const handleExportExcel = async () => {
+    dispatch(
+      openModal({
+        title: "Excel Preview",
+        bodyType: MODAL_BODY_TYPES.EXCEL_PREVIEW,
+        extraObject: {
+          type: "Income",
+        },
+      })
+    );
+  };
+
   const TopSideButtons = () => {
     return (
-      <div className="inline-block float-right">
+      <div className="flex gap-4 float-right">
+        <button
+          className="flex items-center btn px-6 btn-sm normal-case btn-success text-white"
+          onClick={handleExportExcel}
+        >
+          <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
+          Export Excel
+        </button>
+
         <Link to={"/people/income/add"}>
           <button className="btn px-6 btn-sm normal-case btn-primary">
             Add New

@@ -4,21 +4,41 @@ import { Link } from "react-router-dom";
 
 function ProjectStats({}) {
   const [projectData, setProjectData] = useState([]);
+  const [totalPeople, setTotalPeople] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const fetchTotalUsers = async () => {
+    try {
+      const res = await axios.get("api/People/");
+      setTotalPeople(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchProjectData = async () => {
+    try {
+      const res = await axios.get("api/Project");
+      setProjectData(res.data.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
-    const fetchProjectData = async () => {
+    const fetchProjectStat = async () => {
       try {
-        const res = await axios.get("api/Project");
-        setProjectData(res.data.data);
+        await fetchProjectData();
+        await fetchTotalUsers();
       } catch (error) {
-        console.error(error);
       } finally {
         setLoading(false);
       }
     };
-    fetchProjectData();
+    fetchProjectStat();
   }, []);
   return (
     <>
@@ -39,15 +59,15 @@ function ProjectStats({}) {
             </div>
           </div>
 
-          {/* <div className="stat">
-            <div className="stat-title">Total Sub Categories</div>
-            <div className="stat-value">{subCategoryData.length}</div>
+          <div className="stat">
+            <div className="stat-title">Total People</div>
+            <div className="stat-value">{totalPeople.length}</div>
             <div className="stat-actions">
-              <Link to={"/admin/sub-category"}>
-                <button className="btn btn-xs">View Sub Category</button>
+              <Link to={"/admin/people"}>
+                <button className="btn btn-xs">View People</button>
               </Link>
             </div>
-          </div> */}
+          </div>
         </div>
       )}
     </>

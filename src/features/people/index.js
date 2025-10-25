@@ -30,20 +30,41 @@ import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
 
 // * table columns definition
 const columns = [
-  { accessorKey: "peopleID", header: "Id", sortingFn: "alphanumeric" },
-  { accessorKey: "peopleCode", header: "Code" },
-  { accessorKey: "peopleName", header: "Name" },
-  { accessorKey: "emailAddress", header: "Email" },
-  { accessorKey: "mobileNo", header: "Mobile" },
+  {
+    accessorKey: "peopleID",
+    header: "Id",
+    sortingFn: "alphanumeric",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "peopleCode",
+    header: "Code",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "peopleName",
+    header: "Name",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "emailAddress",
+    header: "Email",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "mobileNo",
+    header: "Mobile",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ getValue }) => getStatusBadge(getValue()),
+    cell: ({ getValue }) => getStatusBadge(getValue()) || "-",
   },
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <Actions people={row.original} />,
+    cell: ({ row }) => <Actions people={row.original} /> || "-",
     enableSorting: false,
   },
 ];

@@ -23,6 +23,8 @@ import {
   fetchExpenseById,
   deleteExpense,
 } from "../../expense/expenseSlice.js";
+import ArrowUpTrayIcon from "@heroicons/react/24/outline/ArrowUpTrayIcon.js";
+import { MODAL_BODY_TYPES } from "../../../utils/globalConstantUtil.js";
 
 //   ? converts date format
 const formatDate = (expenseDate) => {
@@ -36,33 +38,62 @@ const formatDate = (expenseDate) => {
 
 // * table columns definition
 const columns = [
-  { accessorKey: "expenseID", header: "Id", sortingFn: "alphanumeric" },
+  {
+    accessorKey: "expenseID",
+    header: "Id",
+    sortingFn: "alphanumeric",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "expenseDate",
     header: "Date",
-    cell: ({ getValue }) => formatDate(getValue()),
+    cell: ({ getValue }) => formatDate(getValue()) || "-",
   },
-  { accessorKey: "categoryName", header: "Category" },
-  { accessorKey: "subCategoryName", header: "Sub Category" },
-  { accessorKey: "projectName", header: "Project" },
-  { accessorKey: "amount", header: "Amount" },
-  { accessorKey: "expenseDetail", header: "Detail" },
-  { accessorKey: "description", header: "Description" },
+  {
+    accessorKey: "categoryName",
+    header: "Category",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "subCategoryName",
+    header: "Sub Category",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "projectName",
+    header: "Project",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "expenseDetail",
+    header: "Detail",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "attachmentPath",
     header: "Attachment",
-    cell: ({ getValue }) => renderImage(getValue()),
+    cell: ({ getValue }) => renderImage(getValue()) || "-",
     enableSorting: false,
   },
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ getValue }) => getStatusBadge(getValue()),
+    cell: ({ getValue }) => getStatusBadge(getValue()) || "-",
   },
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <Actions expense={row.original} />,
+    cell: ({ row }) => <Actions expense={row.original} /> || "-",
     enableSorting: false,
   },
 ];
@@ -179,9 +210,29 @@ function Expense() {
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const handleExportExcel = async () => {
+    dispatch(
+      openModal({
+        title: "Excel Preview",
+        bodyType: MODAL_BODY_TYPES.EXCEL_PREVIEW,
+        extraObject: {
+          type: "Expense",
+        },
+      })
+    );
+  };
+
   const TopSideButtons = () => {
     return (
-      <div className="inline-block float-right">
+      <div className="flex gap-4 float-right">
+        <button
+          className="flex items-center btn px-6 btn-sm normal-case btn-success text-white"
+          onClick={handleExportExcel}
+        >
+          <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
+          Export Excel
+        </button>
+
         <Link to={"/people/expense/add"}>
           <button className="btn px-6 btn-sm normal-case btn-primary">
             Add New

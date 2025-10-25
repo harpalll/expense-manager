@@ -36,29 +36,46 @@ const formatDate = (projectDate) => {
 
 // * table columns definition
 const columns = [
-  { accessorKey: "projectID", header: "Id", sortingFn: "alphanumeric" },
-  { accessorKey: "projectName", header: "Name" },
-  { accessorKey: "projectDetail", header: "Detail" },
-  { accessorKey: "description", header: "Description" },
+  {
+    accessorKey: "projectID",
+    header: "Id",
+    sortingFn: "alphanumeric",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "projectName",
+    header: "Name",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "projectDetail",
+    header: "Detail",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "projectStartDate",
     header: "Start Date",
-    cell: ({ getValue }) => formatDate(getValue()),
+    cell: ({ getValue }) => formatDate(getValue()) || "-",
   },
   {
     accessorKey: "projectEndDate",
     header: "End Date",
-    cell: ({ getValue }) => formatDate(getValue()),
+    cell: ({ getValue }) => formatDate(getValue()) || "-",
   },
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ getValue }) => getStatusBadge(getValue()),
+    cell: ({ getValue }) => getStatusBadge(getValue()) || "-",
   },
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <Actions project={row.original} />,
+    cell: ({ row }) => <Actions project={row.original} /> || "-",
     enableSorting: false,
   },
 ];

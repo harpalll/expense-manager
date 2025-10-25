@@ -24,14 +24,31 @@ const getStatusBadge = (isActive) => {
 
 // * table columns definition
 const columns = [
-  { accessorKey: "userId", header: "Id", sortingFn: "alphanumeric" },
-  { accessorKey: "userName", header: "Name" },
-  { accessorKey: "emailAddress", header: "Email" },
-  { accessorKey: "mobileNo", header: "Mobile" },
+  {
+    accessorKey: "userId",
+    header: "Id",
+    sortingFn: "alphanumeric",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "userName",
+    header: "Name",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "emailAddress",
+    header: "Email",
+    cell: ({ getValue }) => getValue() || "—",
+  },
+  {
+    accessorKey: "mobileNo",
+    header: "Mobile",
+    cell: ({ getValue }) => getValue() || "—",
+  },
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ getValue }) => getStatusBadge(getValue()),
+    cell: ({ getValue }) => getStatusBadge(getValue()) || "-",
   },
   // {
   //   accessorKey: "actions",
