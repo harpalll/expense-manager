@@ -8,6 +8,7 @@ import { MODAL_BODY_TYPES } from "../utils/globalConstantUtil";
 import { clearcategoryDetails } from "../features/category/categorySlice";
 import { clearpeopleDetails } from "../features/people/peopleSlice";
 import AddEditSubCategoryModal from "../features/subCategory/components/AddEditSubCategoryModal";
+import ExportPreviewModal from "../features/common/components/ExportPreviewModal";
 import { clearsubcategoryDetails } from "../features/subCategory/subCategorySlice";
 
 export default function ModalLayout() {
@@ -41,6 +42,10 @@ export default function ModalLayout() {
             extraObject={extraObject}
             closeModal={close}
           />
+        );
+      case MODAL_BODY_TYPES.Excel_Preview:
+        return (
+          <ExportPreviewModal extraObject={extraObject} closeModal={close} />
         );
       default:
         return null;

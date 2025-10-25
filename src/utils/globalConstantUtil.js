@@ -10,6 +10,7 @@ module.exports = Object.freeze({
     EDIT_PEOPLE: "EDIT_PEOPLE",
     ADD_EDIT_CATEGORY: "ADD_EDIT_CATEGORY_MODAL",
     ADD_EDIT_SUB_CATEGORY: "ADD_EDIT_SUB_CATEGORY_MODAL",
+    Excel_Preview: "Excel_Preview_MODAL",
   },
 
   RIGHT_DRAWER_TYPES: {

@@ -7,6 +7,7 @@ import EllipsisVerticalIcon from "@heroicons/react/24/outline/EllipsisVerticalIc
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
 import ArrowUpIcon from "@heroicons/react/24/outline/ArrowUpIcon";
+import ArrowUpTrayIcon from "@heroicons/react/24/outline/ArrowUpTrayIcon";
 import ArrowDownIcon from "@heroicons/react/24/outline/ArrowDownIcon";
 import { openModal } from "../common/modalSlice.js";
 import {
@@ -25,6 +26,8 @@ import {
   deleteExpense,
 } from "./expenseSlice.js";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
+import axios from "axios";
+import * as XLSX from "xlsx";
 
 //   ? converts date format
 const formatDate = (expenseDate) => {
@@ -173,6 +176,7 @@ function Expense() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]);
   const searchRef = useRef(null);
+  const [previewData, setPreviewData] = useState(null);
 
   useEffect(() => {
     dispatch(fetchExpense());
@@ -194,17 +198,31 @@ function Expense() {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  //   const TopSideButtons = () => {
-  //     return (
-  //       <div className="inline-block float-right">
-  //         <Link to={"/admin/people/add"}>
-  //           <button className="btn px-6 btn-sm normal-case btn-primary">
-  //             Add New
-  //           </button>
-  //         </Link>
-  //       </div>
-  //     );
-  //   };
+  const handleExportExcel = async () => {
+    dispatch(
+      openModal({
+        title: "Excel Preview",
+        bodyType: MODAL_BODY_TYPES.Excel_Preview,
+        extraObject: {
+          type: "Expense",
+        },
+      })
+    );
+  };
+
+  const TopSideButtons = () => {
+    return (
+      <div className="inline-block float-right">
+        <button
+          className="flex items-center btn px-6 btn-sm normal-case btn-success text-white"
+          onClick={handleExportExcel}
+        >
+          <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
+          Export Excel
+        </button>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -227,7 +245,7 @@ function Expense() {
       <TitleCard
         title="Expense"
         topMargin="mt-2"
-        // TopSideButtons={<TopSideButtons />}
+        TopSideButtons={<TopSideButtons />}
       >
         {loading ? (
           <SuspenseContent />

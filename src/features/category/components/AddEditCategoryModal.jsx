@@ -6,21 +6,21 @@ import { fetchCategory } from "../categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function AddEditCategoryModal({ extraObject, closeModal }) {
-  const [loading, setLoading] = useState(false);
-  const { mode } = extraObject || {}; // mode: 'add' | 'edit'
-  const dispatch = useDispatch();
-  const { categoryDetails, detailsLoading } = useSelector(
-    (state) => state.category
-  );
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm();
+const [loading, setLoading] = useState(false);
+const { mode } = extraObject || {}; // mode: 'add' | 'edit'
+const dispatch = useDispatch();
+const { categoryDetails, detailsLoading } = useSelector(
+  (state) => state.category
+);
+const {
+  register,
+  handleSubmit,
+  setValue,
+  formState: { errors },
+} = useForm();
 
-  const categoryData =
-    mode === "edit" ? categoryDetails || extraObject.categoryData : null;
+const categoryData =
+  mode === "edit" ? categoryDetails || extraObject.categoryData : null;
 
   useEffect(() => {
     if (mode === "edit" && categoryData) {

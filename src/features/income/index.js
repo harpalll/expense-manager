@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { fetchIncome, fetchIncomeById, deleteIncome } from "./incomeSlice.js";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
+import ArrowUpTrayIcon from "@heroicons/react/24/outline/ArrowUpTrayIcon.js";
 
 //   ? converts date format
 const formatDate = (incomeDate) => {
@@ -190,17 +191,31 @@ function Income() {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  //   const TopSideButtons = () => {
-  //     return (
-  //       <div className="inline-block float-right">
-  //         <Link to={"/admin/people/add"}>
-  //           <button className="btn px-6 btn-sm normal-case btn-primary">
-  //             Add New
-  //           </button>
-  //         </Link>
-  //       </div>
-  //     );
-  //   };
+  const handleExportExcel = async () => {
+    dispatch(
+      openModal({
+        title: "Excel Preview",
+        bodyType: MODAL_BODY_TYPES.Excel_Preview,
+        extraObject: {
+          type: "Income",
+        },
+      })
+    );
+  };
+
+  const TopSideButtons = () => {
+    return (
+      <div className="inline-block float-right">
+        <button
+          className="flex items-center btn px-6 btn-sm normal-case btn-success text-white"
+          onClick={handleExportExcel}
+        >
+          <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
+          Export Excel
+        </button>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -223,7 +238,7 @@ function Income() {
       <TitleCard
         title="Income"
         topMargin="mt-2"
-        // TopSideButtons={<TopSideButtons />}
+        TopSideButtons={<TopSideButtons />}
       >
         {loading ? (
           <SuspenseContent />
