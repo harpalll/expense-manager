@@ -42,9 +42,9 @@ const columns = [
     header: "Date",
     cell: ({ getValue }) => formatDate(getValue()),
   },
-  { accessorKey: "categoryName", header: "Category Name" },
-  { accessorKey: "subCategoryName", header: "Sub Category Name" },
-  { accessorKey: "projectName", header: "Project Name" },
+  { accessorKey: "categoryName", header: "Category" },
+  { accessorKey: "subCategoryName", header: "Sub Category" },
+  { accessorKey: "projectName", header: "Project" },
   { accessorKey: "amount", header: "Amount" },
   { accessorKey: "incomeDetail", header: "Detail" },
   { accessorKey: "description", header: "Description" },
@@ -196,7 +196,7 @@ function Income() {
     dispatch(
       openModal({
         title: "Excel Preview",
-        bodyType: MODAL_BODY_TYPES.Excel_Preview,
+        bodyType: MODAL_BODY_TYPES.EXCEL_PREVIEW,
         extraObject: {
           type: "Income",
         },

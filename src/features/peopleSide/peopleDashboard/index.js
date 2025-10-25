@@ -54,7 +54,7 @@ function Dashboard() {
       description: "Total Expense",
       hasLink: true,
       link: "/people/expense",
-      linkName: "view expense",
+      linkName: "View Expense",
     },
     {
       title: "Total Income",
@@ -63,7 +63,7 @@ function Dashboard() {
       description: "Total Income",
       hasLink: true,
       link: "/people/income",
-      linkName: "view income",
+      linkName: "View Income",
     },
   ];
 
@@ -108,11 +108,11 @@ function Dashboard() {
       </div> */}
 
       {/** ---------------------- Analysis ------------------------- */}
-      {/* <div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
-        <LineChart />
+      <div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
+        {/* <LineChart /> */}
         <ProjectWiseAnalytics />
         <CategoryWiseAnalytics />
-      </div> */}
+      </div>
 
       {/** ---------------------- User source channels table  ------------------------- */}
 

@@ -42,7 +42,7 @@ const ReportModal = ({ extraObject, closeModal }) => {
       toast.error("End Date cannot be before Start Date");
       return;
     }
-
+    
     setLoading(true);
     try {
       const apiUrl =

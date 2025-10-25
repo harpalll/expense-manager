@@ -77,12 +77,13 @@ const AddExpense = () => {
       toast.success(response.data.message);
       window.location.href = "/people/expense";
     } catch (error) {
-      if (error.response) {
-        toast.error(`ERROR: ${error.response.data.message}`);
-        console.error(
-          `ERROR: Status Code: ${error.response.status} || ERRORS:`,
-          error.response.data
-        );
+      if (error.response && error.response.status === 400) {
+        const errors = error.response.data.errors;
+        for (const key in errors) {
+          errors[key].forEach((message) => {
+            toast.error(message);
+          });
+        }
       } else if (error.request) {
         // no response
         toast.error("ERROR: No response received from server");
@@ -138,13 +139,41 @@ const AddExpense = () => {
                   <label className="label">
                     <span className="label-text">Select Category</span>
                   </label>
-                  <select
+                  {/* <select
                     {...register("CategoryID")}
                     className="select select-bordered w-full"
                     onChange={(e) => {
                       dispatch(fetchActiveExpenseSubCategory(e.target.value));
                       // setValue("isExpense", selected.isExpense);
                       // setValue("isIncome", selected.isIncome);
+                    }}
+                  >
+                    <option value="">-- Select Category --</option>
+                    {activeExpenseCategory?.map((cat) => (
+                      <option key={cat.categoryID} value={cat.categoryID}>
+                        {cat.categoryName}
+                      </option>
+                    ))}
+                  </select> */}
+                  <select
+                    {...register("CategoryID")}
+                    className="select select-bordered w-full"
+                    onChange={(e) => {
+                      const selectedValue = e.target.value;
+                      setValue("CategoryID", selectedValue);
+                      setValue("SubCategoryID", ""); // reset subcategory always when category changes
+
+                      if (selectedValue) {
+                        // Fetch subcategories only if a valid category is selected
+                        dispatch(fetchActiveExpenseSubCategory(selectedValue));
+                      } else {
+                        // If user selects default blank category, clear subcategory options
+                        // You can either clear Redux state or just rely on re-render
+                        // easiest: manually clear from redux
+                        dispatch({
+                          type: "subCategory/clearActiveExpenseSubCategory",
+                        });
+                      }
                     }}
                   >
                     <option value="">-- Select Category --</option>
@@ -284,7 +313,7 @@ const AddExpense = () => {
           <div className="grid grid-cols-1 gap-6">
             <div className="form-control w-full mt-4">
               <label className="label">
-                <span className="label-text required">
+                <span className="label-text">
                   Attachment (Image must be a PNG or JPG or pdf and not exceed 2
                   MB)
                 </span>

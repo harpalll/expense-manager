@@ -64,7 +64,7 @@ function Dashboard() {
       description: "Total Users",
       hasLink: true,
       link: "/admin/people",
-      linkName: "view people",
+      linkName: "View People",
     },
     {
       title: "Total Expense",
@@ -73,7 +73,7 @@ function Dashboard() {
       description: "Total Expense",
       hasLink: true,
       link: "/admin/expense",
-      linkName: "view expense",
+      linkName: "View Expense",
     },
     {
       title: "Total Income",
@@ -82,7 +82,7 @@ function Dashboard() {
       description: "Total Income",
       hasLink: true,
       link: "/admin/income",
-      linkName: "view income",
+      linkName: "View Income",
     },
   ];
 

@@ -35,11 +35,11 @@ const routes = [
     icon: <BanknotesIcon className={iconClasses} />,
     name: "Income",
   },
-  {
-    path: "/people/charts",
-    icon: <ChartBarIcon className={iconClasses} />,
-    name: "Analytics",
-  },
+  // {
+  //   path: "/people/charts",
+  //   icon: <ChartBarIcon className={iconClasses} />,
+  //   name: "Analytics",
+  // },
 ];
 
 export default routes;

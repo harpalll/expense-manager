@@ -115,6 +115,9 @@ const subCategorySlice = createSlice({
     clearsubcategoryDetails: (state) => {
       state.subCategoryDetails = null;
     },
+    clearActiveExpenseSubCategory: (state) => {
+      state.activeExpenseSubCategory = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -176,6 +179,7 @@ const subCategorySlice = createSlice({
   },
 });
 
-export const { clearsubcategoryDetails } = subCategorySlice.actions;
+export const { clearsubcategoryDetails, clearActiveExpenseSubCategory } =
+  subCategorySlice.actions;
 
 export default subCategorySlice.reducer;
