@@ -21,40 +21,51 @@ function Dashboard() {
   const dispatch = useDispatch();
   const [totalExpense, setTotalExpense] = useState(null);
   const [totalIncome, setTotalIncome] = useState(null);
+  const [totalPeople, setTotalPeople] = useState(null);
+
+  const fetchTotalExpenseIncome = async () => {
+    try {
+      const res = await axios.get("api/total-incomes-and-expenses");
+      setTotalExpense(res.data.data.totalExpenses);
+      setTotalIncome(res.data.data.totalIncomes);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchTotalUsers = async () => {
+    try {
+      const res = await axios.get("api/People");
+      setTotalPeople(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
-
-    const fetchTotalExpenseIncome = async () => {
+    const fetchStats = async () => {
       try {
-        const res = await axios.get("api/total-incomes-and-expenses");
-        setTotalExpense(res.data.data.totalExpenses);
-        setTotalIncome(res.data.data.totalIncomes);
+        await fetchTotalExpenseIncome();
+        await fetchTotalUsers();
       } catch (error) {
-        console.error(error);
       } finally {
         setLoading(false);
       }
     };
-    fetchTotalExpenseIncome();
+    fetchStats();
   }, []);
 
   const statsData = [
     {
-      title: "Active People",
-      value: "5.6k",
+      title: "People",
+      value: totalPeople?.length,
       icon: <UsersIcon className="w-8 h-8" />,
-      description: "↙ 300 (18%)",
+      description: "Total Users",
       hasLink: true,
       link: "/admin/people",
       linkName: "view people",
     },
-    // {
-    //   title: "New Users",
-    //   value: "34.7k",
-    //   icon: <UserGroupIcon className="w-8 h-8" />,
-    //   description: "↗︎ 2300 (22%)",
-    // },
     {
       title: "Total Expense",
       value: totalExpense,
@@ -91,7 +102,7 @@ function Dashboard() {
       <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod} />
 
       {/** ---------------------- Stats ------------------------- */}
-      <div className="grid lg:grid-cols-4 mt-4 md:grid-cols-2 grid-cols-1 gap-6">
+      <div className="grid lg:grid-cols-3 mt-4 md:grid-cols-3 grid-cols-1 gap-6">
         {loading ? (
           <>
             <div className="flex justify-center items-center py-8">
