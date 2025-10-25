@@ -48,7 +48,16 @@ function Register() {
       window.location.href = "/login";
     } catch (error) {
       if (error.response) {
-        toast.error(`ERROR: ${error.response.data.message}`);
+        if (error.response.status === 400) {
+          const errors = error.response.data.errors;
+          for (const key in errors) {
+            errors[key].forEach((message) => {
+              toast.error(message);
+            });
+          }
+        }
+
+        // toast.error(`ERROR: ${error.response.data.message}`);
         console.error(
           `ERROR: Status Code: ${error.response.status} || ERRORS:`,
           error.response.data
@@ -104,7 +113,9 @@ function Register() {
               <div className="mb-4">
                 <div className="form-control w-full mt-4">
                   <label className="label">
-                    <span className={"label-text text-base-content required"}>Name</span>
+                    <span className={"label-text text-base-content required"}>
+                      Name
+                    </span>
                   </label>
                   <input
                     type="text"
