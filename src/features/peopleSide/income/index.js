@@ -19,26 +19,29 @@ import {
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import {
-  fetchExpense,
-  fetchExpenseById,
-  deleteExpense,
-} from "../../expense/expenseSlice.js";
+  fetchIncome,
+  fetchIncomeById,
+  deleteIncome,
+} from "../../income/incomeSlice.js";
 
 //   ? converts date format
-const formatDate = (expenseDate) => {
-  if (!expenseDate) return "";
-  const date = new Date(expenseDate);
+const formatDate = (incomeDate) => {
+  if (!incomeDate) return "";
+  const date = new Date(incomeDate);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 
+// const formattedIncomeDate = formatDate(incomeDetails.incomeDate);
+// setValue("IncomeDate", formattedIncomeDate);
+
 // * table columns definition
 const columns = [
-  { accessorKey: "expenseID", header: "Id", sortingFn: "alphanumeric" },
+  { accessorKey: "incomeID", header: "Id", sortingFn: "alphanumeric" },
   {
-    accessorKey: "expenseDate",
+    accessorKey: "incomeDate",
     header: "Date",
     cell: ({ getValue }) => formatDate(getValue()),
   },
@@ -46,7 +49,7 @@ const columns = [
   { accessorKey: "subCategoryName", header: "Sub Category Name" },
   { accessorKey: "projectName", header: "Project Name" },
   { accessorKey: "amount", header: "Amount" },
-  { accessorKey: "expenseDetail", header: "Detail" },
+  { accessorKey: "incomeDetail", header: "Detail" },
   { accessorKey: "description", header: "Description" },
   {
     accessorKey: "attachmentPath",
@@ -62,7 +65,7 @@ const columns = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <Actions expense={row.original} />,
+    cell: ({ row }) => <Actions income={row.original} />,
     enableSorting: false,
   },
 ];
@@ -85,7 +88,7 @@ const renderImage = (attachmentPath) => {
   );
 };
 
-const Actions = ({ expense }) => {
+const Actions = ({ income }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const dispatch = useDispatch();
@@ -105,11 +108,11 @@ const Actions = ({ expense }) => {
       openModal({
         bodyType: "CONFIRMATION_MODAL",
         extraObject: {
-          message: `Are you sure you want to delete ${expense.expenseDetail}?`,
+          message: `Are you sure you want to delete ${income.incomeDetail}?`,
           onConfirm: async () => {
-            dispatch(deleteExpense(expense.expenseID))
+            dispatch(deleteIncome(income.incomeID))
               .unwrap()
-              .then(() => dispatch(fetchExpense()))
+              .then(() => dispatch(fetchIncome()))
               .catch((err) => console.error(err));
           },
         },
@@ -130,7 +133,7 @@ const Actions = ({ expense }) => {
         <ul className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded z-50 menu p-2">
           <li>
             <Link
-              to={`/people/expense/edit/${expense.expenseID}`}
+              to={`/people/income/edit/${income.incomeID}`}
               className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 normal-case text-gray-800 dark:text-gray-100"
             >
               <PencilIcon className="w-4 h-4 mr-2" />
@@ -152,15 +155,15 @@ const Actions = ({ expense }) => {
   );
 };
 
-function Expense() {
-  const { expense, loading, error } = useSelector((state) => state.expense);
+function Income() {
+  const { income, loading, error } = useSelector((state) => state.income);
   const dispatch = useDispatch();
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]);
   const searchRef = useRef(null);
 
   useEffect(() => {
-    dispatch(fetchExpense());
+    dispatch(fetchIncome());
   }, []);
 
   useEffect(() => {
@@ -168,7 +171,7 @@ function Expense() {
   }, [error]);
 
   const table = useReactTable({
-    data: expense,
+    data: income,
     columns,
     state: { globalFilter, sorting },
     onGlobalFilterChange: setGlobalFilter,
@@ -182,7 +185,7 @@ function Expense() {
   const TopSideButtons = () => {
     return (
       <div className="inline-block float-right">
-        <Link to={"/people/expense/add"}>
+        <Link to={"/people/income/add"}>
           <button className="btn px-6 btn-sm normal-case btn-primary">
             Add New
           </button>
@@ -210,7 +213,7 @@ function Expense() {
   return (
     <>
       <TitleCard
-        title="Expense"
+        title="Income"
         topMargin="mt-2"
         TopSideButtons={<TopSideButtons />}
       >
@@ -218,10 +221,10 @@ function Expense() {
           <SuspenseContent />
         ) : (
           <>
-            {expense?.length === 0 ? (
+            {income?.length === 0 ? (
               <>
                 <div className="flex justify-center items-center">
-                  <h1>No expense.</h1>
+                  <h1>No income.</h1>
                 </div>
               </>
             ) : (
@@ -315,4 +318,4 @@ function Expense() {
   );
 }
 
-export default Expense;
+export default Income;

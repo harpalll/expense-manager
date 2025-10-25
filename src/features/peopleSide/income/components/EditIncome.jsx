@@ -5,16 +5,16 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchActiveProject } from "../../../project/projectSlice";
-import { fetchActiveExpenseCategory } from "../../../category/categorySlice";
-import { fetchActiveExpenseSubCategory } from "../../../subCategory/subCategorySlice";
+import { fetchActiveIncomeCategory } from "../../../category/categorySlice";
+import { fetchActiveIncomeSubCategory } from "../../../subCategory/subCategorySlice";
 import { useParams } from "react-router-dom";
-import { fetchExpenseById } from "../../../expense/expenseSlice";
+import { fetchIncomeById } from "../../../income/incomeSlice";
 import SuspenseContent from "../../../../containers/SuspenseContent";
 
-const EditExpense = () => {
-  const { expenseId } = useParams();
-  const { expenseDetails, detailsLoading } = useSelector(
-    (state) => state.expense
+const EditIncome = () => {
+  const { incomeId } = useParams();
+  const { incomeDetails, detailsLoading } = useSelector(
+    (state) => state.income
   );
 
   const [loading, setLoading] = useState(false);
@@ -33,10 +33,10 @@ const EditExpense = () => {
     setValue,
   } = useForm();
 
-  const { activeExpenseCategory, activeExpenseCategoryLoading } = useSelector(
+  const { activeIncomeCategory, activeIncomeCategoryLoading } = useSelector(
     (state) => state.category
   );
-  const { activeExpenseSubCategory, activeExpenseSubCategoryLoading } =
+  const { activeIncomeSubCategory, activeIncomeSubCategoryLoading } =
     useSelector((state) => state.subCategory);
 
   const { activeProject, activeProjectLoading } = useSelector(
@@ -44,11 +44,11 @@ const EditExpense = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchExpenseById(expenseId));
+    dispatch(fetchIncomeById(incomeId));
   }, []);
 
   useEffect(() => {
-    if (expenseDetails) {
+    if (incomeDetails) {
       //   ? This Function converts to UTC date can cause some issues
       //   const formatDate = (d) => {
       //     // format: "YYYY-MM-DD"
@@ -66,34 +66,34 @@ const EditExpense = () => {
         return `${year}-${month}-${day}`;
       };
 
-      const formattedExpenseDate = formatDate(expenseDetails.expenseDate);
-      setValue("ExpenseDate", formattedExpenseDate);
+      const formattedIncomeDate = formatDate(incomeDetails.incomeDate);
+      setValue("IncomeDate", formattedIncomeDate);
 
-      const selectedCategoryFromDB = activeExpenseCategory.find(
-        (c) => c.categoryID === expenseDetails.categoryID
+      const selectedCategoryFromDB = activeIncomeCategory.find(
+        (c) => c.categoryID === incomeDetails.categoryID
       );
 
-      const selectedSubCategoryFromDB = activeExpenseSubCategory.find(
-        (c) => c.subCategoryID === expenseDetails.SubCategoryID
+      const selectedSubCategoryFromDB = activeIncomeSubCategory.find(
+        (c) => c.subCategoryID === incomeDetails.subCategoryID
       );
 
       const selectedProjectFromDB = activeProject.find(
-        (p) => p.projectID === expenseDetails.ProjectID
+        (p) => p.projectID === incomeDetails.ProjectID
       );
 
       setSelectedCategory(selectedCategoryFromDB);
       setSelectedSubCategory(selectedSubCategoryFromDB);
       setSelectedProject(selectedProjectFromDB);
 
-      setValue("CategoryID", expenseDetails.categoryID);
-      setValue("SubCategoryID", expenseDetails.subCategoryID);
-      setValue("ProjectID", expenseDetails.projectID);
+      setValue("CategoryID", incomeDetails.categoryID);
+      setValue("SubCategoryID", incomeDetails.subCategoryID);
+      setValue("ProjectID", incomeDetails.projectID);
 
-      setValue("Amount", expenseDetails.amount);
-      setValue("ExpenseDetail", expenseDetails.expenseDetail);
-      setValue("Description", expenseDetails.description);
+      setValue("Amount", incomeDetails.amount);
+      setValue("IncomeDetail", incomeDetails.incomeDetail);
+      setValue("Description", incomeDetails.description);
     }
-  }, [expenseDetails, setValue]);
+  }, [incomeDetails, setValue]);
 
   useEffect(() => {
     if (!watch("AttachmentPath")?.[0]) {
@@ -112,12 +112,12 @@ const EditExpense = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchActiveExpenseCategory());
+    dispatch(fetchActiveIncomeCategory());
   }, []);
 
   useEffect(() => {
-    if (expenseDetails) {
-      dispatch(fetchActiveExpenseSubCategory(expenseDetails.categoryID));
+    if (incomeDetails) {
+      dispatch(fetchActiveIncomeSubCategory(incomeDetails.categoryID));
     }
   }, []);
 
@@ -125,29 +125,25 @@ const EditExpense = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("ExpenseDate", data.ExpenseDate);
+      formData.append("IncomeDate", data.IncomeDate);
       formData.append("CategoryID", data.CategoryID);
       formData.append("SubCategoryID", data.SubCategoryID);
       formData.append("ProjectID", data.ProjectID);
       formData.append("Amount", data.Amount);
-      formData.append("ExpenseDetail", data.ExpenseDetail);
+      formData.append("IncomeDetail", data.IncomeDetail);
       formData.append("Description", data.Description);
 
       if (data.AttachmentPath && data.AttachmentPath[0]) {
         formData.append("AttachmentPath", data.AttachmentPath[0]);
       }
 
-      const response = await axios.patch(
-        `/api/Expense/${expenseId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.patch(`/api/Income/${incomeId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success(response.data.message);
-      window.location.href = "/people/expense";
+      window.location.href = "/people/income";
     } catch (error) {
       if (error.response) {
         toast.error(`ERROR: ${error.response.data.title}`);
@@ -171,7 +167,7 @@ const EditExpense = () => {
 
   return (
     <>
-      <TitleCard title="Edit Expense" topMargin="mt-2">
+      <TitleCard title="Edit Income" topMargin="mt-2">
         {detailsLoading ? (
           <>
             <SuspenseContent />
@@ -183,19 +179,19 @@ const EditExpense = () => {
                 <div className="form-control w-full mt-4">
                   <label className="label">
                     <span className={"label-text text-base-content required"}>
-                      Expense Date
+                      Income Date
                     </span>
                   </label>
                   <input
                     type="date"
                     className="input input-bordered w-full"
-                    {...register("ExpenseDate", {
-                      required: "Expense Date is required",
+                    {...register("IncomeDate", {
+                      required: "Income Date is required",
                     })}
                   />
-                  {errors.ExpenseDate && (
+                  {errors.IncomeDate && (
                     <p className="text-red-500 text-sm mt-2">
-                      {errors.ExpenseDate.message}
+                      {errors.IncomeDate.message}
                     </p>
                   )}
                 </div>
@@ -204,7 +200,7 @@ const EditExpense = () => {
 
               <div className="grid grid-cols-2 gap-6">
                 <div className="form-control w-full mt-4">
-                  {activeExpenseCategoryLoading ? (
+                  {activeIncomeCategoryLoading ? (
                     <>
                       <span className="loading loading-ball loading-sm"></span>
                       loading categories..
@@ -219,14 +215,14 @@ const EditExpense = () => {
                         className="select select-bordered w-full"
                         onChange={(e) => {
                           dispatch(
-                            fetchActiveExpenseSubCategory(e.target.value)
+                            fetchActiveIncomeSubCategory(e.target.value)
                           );
                           // setValue("isExpense", selected.isExpense);
                           // setValue("isIncome", selected.isIncome);
                         }}
                       >
                         <option value="">-- Select Category --</option>
-                        {activeExpenseCategory?.map((cat) => (
+                        {activeIncomeCategory?.map((cat) => (
                           <option key={cat.categoryID} value={cat.categoryID}>
                             {cat.categoryName}
                           </option>
@@ -237,7 +233,7 @@ const EditExpense = () => {
                 </div>
 
                 <div className="form-control w-full mt-4">
-                  {activeExpenseSubCategoryLoading ? (
+                  {activeIncomeSubCategoryLoading ? (
                     <>
                       <span className="loading loading-ball loading-sm"></span>
                       loading sub-categories..
@@ -252,7 +248,7 @@ const EditExpense = () => {
                         className="select select-bordered w-full"
                       >
                         <option value="">-- Select Sub Category --</option>
-                        {activeExpenseSubCategory?.map((subCat) => (
+                        {activeIncomeSubCategory?.map((subCat) => (
                           <option
                             key={subCat.subCategoryID}
                             value={subCat.subCategoryID}
@@ -324,13 +320,13 @@ const EditExpense = () => {
                 <div className="form-control w-full mt-4">
                   <label className="label">
                     <span className={"label-text text-base-content"}>
-                      Expense Detail
+                      Income Detail
                     </span>
                   </label>
                   <textarea
                     className="textarea textarea-bordered w-full"
                     placeholder="demo"
-                    {...register("ExpenseDetail")}
+                    {...register("IncomeDetail")}
                     rows={3}
                   />
                 </div>
@@ -353,11 +349,11 @@ const EditExpense = () => {
               <div className="grid grid-cols-1 gap-6">
                 <div className="form-control w-full mt-4">
                   {/* preview */}
-                  {expenseDetails?.attachmentPath && (
+                  {incomeDetails?.attachmentPath && (
                     <div className="mt-3">
                       <p className="text-sm mb-1">Current Image:</p>
                       <img
-                        src={expenseDetails.attachmentPath}
+                        src={incomeDetails.attachmentPath}
                         alt="Profile"
                         className="w-24 h-24 rounded-full border object-cover"
                       />
@@ -405,4 +401,4 @@ const EditExpense = () => {
   );
 };
 
-export default EditExpense;
+export default EditIncome;

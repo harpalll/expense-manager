@@ -5,8 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchActiveProject } from "../../../project/projectSlice";
-import { fetchActiveExpenseCategory } from "../../../category/categorySlice";
-import { fetchActiveExpenseSubCategory } from "../../../subCategory/subCategorySlice";
+import { fetchActiveIncomeCategory } from "../../../category/categorySlice";
+import { fetchActiveIncomeSubCategory } from "../../../subCategory/subCategorySlice";
 
 const AddExpense = () => {
   const [loading, setLoading] = useState(false);
@@ -22,10 +22,10 @@ const AddExpense = () => {
     setValue,
   } = useForm();
 
-  const { activeExpenseCategory, activeExpenseCategoryLoading } = useSelector(
+  const { activeIncomeCategory, activeIncomeCategoryLoading } = useSelector(
     (state) => state.category
   );
-  const { activeExpenseSubCategory, activeExpenseSubCategoryLoading } =
+  const { activeIncomeSubCategory, activeIncomeSubCategoryLoading } =
     useSelector((state) => state.subCategory);
 
   const { activeProject, activeProjectLoading } = useSelector(
@@ -49,19 +49,19 @@ const AddExpense = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchActiveExpenseCategory());
+    dispatch(fetchActiveIncomeCategory());
   }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("ExpenseDate", data.ExpenseDate);
+      formData.append("IncomeDate", data.IncomeDate);
       formData.append("CategoryID", data.CategoryID);
       formData.append("SubCategoryID", data.SubCategoryID);
       formData.append("ProjectID", data.ProjectID);
       formData.append("Amount", data.Amount);
-      formData.append("ExpenseDetail", data.ExpenseDetail);
+      formData.append("IncomeDetail", data.IncomeDetail);
       //   formData.append("AttachmentPath", data.AttachmentPath);
       formData.append("Description", data.description);
 
@@ -69,16 +69,16 @@ const AddExpense = () => {
         formData.append("AttachmentPath", data.AttachmentPath[0]);
       }
 
-      const response = await axios.post("/api/Expense", formData, {
+      const response = await axios.post("/api/Income", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       toast.success(response.data.message);
-      window.location.href = "/people/expense";
+      window.location.href = "/people/income";
     } catch (error) {
       if (error.response) {
-        toast.error(`ERROR: ${error.response.data.message}`);
+        toast.error(`ERROR: ${error.response.data.title}`);
         console.error(
           `ERROR: Status Code: ${error.response.status} || ERRORS:`,
           error.response.data
@@ -99,25 +99,25 @@ const AddExpense = () => {
 
   return (
     <>
-      <TitleCard title="Add Expense" topMargin="mt-2">
+      <TitleCard title="Add Income" topMargin="mt-2">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-6">
             <div className="form-control w-full mt-4">
               <label className="label">
                 <span className={"label-text text-base-content required"}>
-                  Expense Date
+                  Income Date
                 </span>
               </label>
               <input
                 type="date"
                 className="input input-bordered w-full"
-                {...register("ExpenseDate", {
-                  required: "Expense Date is required",
+                {...register("IncomeDate", {
+                  required: "Income Date is required",
                 })}
               />
-              {errors.ExpenseDate && (
+              {errors.IncomeDate && (
                 <p className="text-red-500 text-sm mt-2">
-                  {errors.ExpenseDate.message}
+                  {errors.IncomeDate.message}
                 </p>
               )}
             </div>
@@ -126,7 +126,7 @@ const AddExpense = () => {
 
           <div className="grid grid-cols-2 gap-6">
             <div className="form-control w-full mt-4">
-              {activeExpenseCategoryLoading ? (
+              {activeIncomeCategoryLoading ? (
                 <>
                   <span className="loading loading-ball loading-sm"></span>
                   loading categories..
@@ -140,13 +140,13 @@ const AddExpense = () => {
                     {...register("CategoryID")}
                     className="select select-bordered w-full"
                     onChange={(e) => {
-                      dispatch(fetchActiveExpenseSubCategory(e.target.value));
+                      dispatch(fetchActiveIncomeSubCategory(e.target.value));
                       // setValue("isExpense", selected.isExpense);
                       // setValue("isIncome", selected.isIncome);
                     }}
                   >
                     <option value="">-- Select Category --</option>
-                    {activeExpenseCategory?.map((cat) => (
+                    {activeIncomeCategory?.map((cat) => (
                       <option key={cat.categoryID} value={cat.categoryID}>
                         {cat.categoryName}
                       </option>
@@ -157,7 +157,7 @@ const AddExpense = () => {
             </div>
 
             <div className="form-control w-full mt-4">
-              {activeExpenseSubCategoryLoading ? (
+              {activeIncomeSubCategoryLoading ? (
                 <>
                   <span className="loading loading-ball loading-sm"></span>
                   loading sub-categories..
@@ -172,7 +172,7 @@ const AddExpense = () => {
                     className="select select-bordered w-full"
                   >
                     <option value="">-- Select Sub Category --</option>
-                    {activeExpenseSubCategory?.map((subCat) => (
+                    {activeIncomeSubCategory?.map((subCat) => (
                       <option
                         key={subCat.subCategoryID}
                         value={subCat.subCategoryID}
@@ -244,13 +244,13 @@ const AddExpense = () => {
             <div className="form-control w-full mt-4">
               <label className="label">
                 <span className={"label-text text-base-content"}>
-                  Expense Detail
+                  Income Detail
                 </span>
               </label>
               <textarea
                 className="textarea textarea-bordered w-full"
                 placeholder="demo"
-                {...register("ExpenseDetail")}
+                {...register("IncomeDetail")}
                 rows={3}
               />
             </div>

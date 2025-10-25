@@ -19,6 +19,15 @@ const EditExpense = lazy(() =>
   import("../features/peopleSide/expense/components/EditExpense.jsx")
 );
 
+// * Income Routes
+const Income = lazy(() => import("../pages/protected/people/Income.js"));
+const AddIncome = lazy(() =>
+  import("../features/peopleSide/income/components/AddIncome.jsx")
+);
+const EditIncome = lazy(() =>
+  import("../features/peopleSide/income/components/EditIncome.jsx")
+);
+
 // * Category Routes
 const Category = lazy(() => import("../pages/protected/Category.js"));
 
@@ -44,6 +53,19 @@ const routes = [
   {
     path: "/expense/edit/:expenseId",
     component: EditExpense,
+  },
+  // income routes
+  {
+    path: "/income",
+    component: Income,
+  },
+  {
+    path: "/income/add",
+    component: AddIncome,
+  },
+  {
+    path: "/income/edit/:incomeId",
+    component: EditIncome,
   },
   {
     path: "/404",
