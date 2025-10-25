@@ -22,10 +22,24 @@ import { Link } from "react-router-dom";
 import { fetchIncome, fetchIncomeById, deleteIncome } from "./incomeSlice.js";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
 
+//   ? converts date format
+const formatDate = (incomeDate) => {
+  if (!incomeDate) return "";
+  const date = new Date(incomeDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 // * table columns definition
 const columns = [
   { accessorKey: "incomeID", header: "Id", sortingFn: "alphanumeric" },
-  { accessorKey: "incomeDate", header: "Date" },
+  {
+    accessorKey: "incomeDate",
+    header: "Date",
+    cell: ({ getValue }) => formatDate(getValue()),
+  },
   { accessorKey: "categoryName", header: "Category Name" },
   { accessorKey: "subCategoryName", header: "Sub Category Name" },
   { accessorKey: "projectName", header: "Project Name" },

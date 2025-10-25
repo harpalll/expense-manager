@@ -8,7 +8,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import TitleCard from "../../../components/Cards/TitleCard";
+import TitleCard from "../../../../components/Cards/TitleCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -21,17 +21,26 @@ ChartJS.register(
   Legend
 );
 
-function BarChart() {
+function CategoryWiseAnalytics() {
   const [categoryData, setCategoryData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   //   categoryId 4
   // categoryName  "Travel"
   // totalExpense 100.5
   // totalIncome 100
 
   useEffect(() => {
+    setLoading(true);
     const fetchCategoryData = async () => {
-      const res = await axios.get("api/category-wise-totals");
-      setCategoryData(res.data.data);
+      try {
+        const res = await axios.get("api/category-wise-totals");
+        setCategoryData(res.data.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchCategoryData();
   }, []);
@@ -84,10 +93,17 @@ function BarChart() {
   };
 
   return (
-    <TitleCard title={"Revenue"}>
-      <Bar options={options} data={data} />
+    <TitleCard title={"Category Wise Analytics"}>
+      {loading ? (
+        <div className="flex justify-center items-center py-8">
+          <span className="loading loading-ball loading-md"></span>
+          <p className="ml-3"> Loading Category Wise Analytics...</p>
+        </div>
+      ) : (
+        <Bar options={options} data={data} />
+      )}
     </TitleCard>
   );
 }
 
-export default BarChart;
+export default CategoryWiseAnalytics;

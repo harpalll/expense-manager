@@ -26,10 +26,24 @@ import {
 } from "./expenseSlice.js";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
 
+//   ? converts date format
+const formatDate = (expenseDate) => {
+  if (!expenseDate) return "";
+  const date = new Date(expenseDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 // * table columns definition
 const columns = [
   { accessorKey: "expenseID", header: "Id", sortingFn: "alphanumeric" },
-  { accessorKey: "expenseDate", header: "Date" },
+  {
+    accessorKey: "expenseDate",
+    header: "Date",
+    cell: ({ getValue }) => formatDate(getValue()),
+  },
   { accessorKey: "categoryName", header: "Category Name" },
   { accessorKey: "subCategoryName", header: "Sub Category Name" },
   { accessorKey: "projectName", header: "Project Name" },

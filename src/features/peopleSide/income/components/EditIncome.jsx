@@ -49,6 +49,18 @@ const EditIncome = () => {
 
   useEffect(() => {
     if (incomeDetails) {
+      dispatch(fetchActiveProject());
+      dispatch(fetchActiveIncomeCategory());
+
+      // SubCategory -> CategoryID
+      if (incomeDetails.categoryID) {
+        dispatch(fetchActiveIncomeSubCategory(incomeDetails.categoryID));
+      }
+    }
+  }, [dispatch, incomeDetails]);
+
+  useEffect(() => {
+    if (incomeDetails) {
       //   ? This Function converts to UTC date can cause some issues
       //   const formatDate = (d) => {
       //     // format: "YYYY-MM-DD"
@@ -106,20 +118,6 @@ const EditIncome = () => {
 
     return () => URL.revokeObjectURL(objectUrl);
   }, [watch("AttachmentPath")]);
-
-  useEffect(() => {
-    dispatch(fetchActiveProject());
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchActiveIncomeCategory());
-  }, []);
-
-  useEffect(() => {
-    if (incomeDetails) {
-      dispatch(fetchActiveIncomeSubCategory(incomeDetails.categoryID));
-    }
-  }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -202,8 +200,10 @@ const EditIncome = () => {
                 <div className="form-control w-full mt-4">
                   {activeIncomeCategoryLoading ? (
                     <>
-                      <span className="loading loading-ball loading-sm"></span>
-                      loading categories..
+                      <div className="flex justify-center items-center py-8">
+                        <span className="loading loading-ball loading-sm"></span>
+                        <p className="ml-3"> Loading Categories...</p>
+                      </div>
                     </>
                   ) : (
                     <>
@@ -235,8 +235,10 @@ const EditIncome = () => {
                 <div className="form-control w-full mt-4">
                   {activeIncomeSubCategoryLoading ? (
                     <>
-                      <span className="loading loading-ball loading-sm"></span>
-                      loading sub-categories..
+                      <div className="flex justify-center items-center py-8">
+                        <span className="loading loading-ball loading-sm"></span>
+                        <p className="ml-3"> Loading Sub Categories...</p>
+                      </div>
                     </>
                   ) : (
                     <>
@@ -264,29 +266,39 @@ const EditIncome = () => {
 
               <div className="grid grid-cols-1 gap-6">
                 <div className="form-control w-full mt-4">
-                  <label className="label">
-                    <span className="label-text">
-                      {activeProjectLoading
-                        ? "loading projects.."
-                        : "Select Project"}
-                    </span>
-                  </label>
-                  <select
-                    {...register("ProjectID")}
-                    className="select select-bordered w-full"
-                  >
-                    <option value="">-- Select Project --</option>
-                    {activeProject?.map((project) => (
-                      <option key={project.projectID} value={project.projectID}>
-                        {project.projectName}
-                      </option>
-                    ))}
-                  </select>
-                  {/* {errors.ProjectID && (
+                  {activeProjectLoading ? (
+                    <>
+                      <div className="flex justify-center items-center py-8">
+                        <span className="loading loading-ball loading-sm"></span>
+                        <p className="ml-3"> Loading Projects...</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <label className="label">
+                        <span className="label-text">Select Project</span>
+                      </label>
+                      <select
+                        {...register("ProjectID")}
+                        className="select select-bordered w-full"
+                      >
+                        <option value="">-- Select Project --</option>
+                        {activeProject?.map((project) => (
+                          <option
+                            key={project.projectID}
+                            value={project.projectID}
+                          >
+                            {project.projectName}
+                          </option>
+                        ))}
+                      </select>
+                      {/* {errors.ProjectID && (
                 <p className="text-red-500 text-sm">
                   {errors.ProjectID.message}
                 </p>
               )} */}
+                    </>
+                  )}
                 </div>
               </div>
 

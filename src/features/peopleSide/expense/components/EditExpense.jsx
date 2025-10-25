@@ -49,6 +49,18 @@ const EditExpense = () => {
 
   useEffect(() => {
     if (expenseDetails) {
+      dispatch(fetchActiveProject());
+      dispatch(fetchActiveExpenseCategory());
+
+      // SubCategory -> CategoryID
+      if (expenseDetails.categoryID) {
+        dispatch(fetchActiveExpenseSubCategory(expenseDetails.categoryID));
+      }
+    }
+  }, [dispatch, expenseDetails]);
+
+  useEffect(() => {
+    if (expenseDetails) {
       //   ? This Function converts to UTC date can cause some issues
       //   const formatDate = (d) => {
       //     // format: "YYYY-MM-DD"
@@ -106,20 +118,6 @@ const EditExpense = () => {
 
     return () => URL.revokeObjectURL(objectUrl);
   }, [watch("AttachmentPath")]);
-
-  useEffect(() => {
-    dispatch(fetchActiveProject());
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchActiveExpenseCategory());
-  }, []);
-
-  useEffect(() => {
-    if (expenseDetails) {
-      dispatch(fetchActiveExpenseSubCategory(expenseDetails.categoryID));
-    }
-  }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -206,8 +204,10 @@ const EditExpense = () => {
                 <div className="form-control w-full mt-4">
                   {activeExpenseCategoryLoading ? (
                     <>
-                      <span className="loading loading-ball loading-sm"></span>
-                      loading categories..
+                      <div className="flex justify-center items-center py-8">
+                        <span className="loading loading-ball loading-sm"></span>
+                        <p className="ml-3"> Loading Categories...</p>
+                      </div>
                     </>
                   ) : (
                     <>
@@ -237,30 +237,45 @@ const EditExpense = () => {
                 </div>
 
                 <div className="form-control w-full mt-4">
-                  {activeExpenseSubCategoryLoading ? (
+                  {activeExpenseCategoryLoading ? (
                     <>
-                      <span className="loading loading-ball loading-sm"></span>
-                      loading sub-categories..
+                      <div className="flex justify-center items-center py-8">
+                        <span className="loading loading-ball loading-sm"></span>
+                        <p className="ml-3"> Loading Categories...</p>
+                      </div>
                     </>
                   ) : (
                     <>
-                      <label className="label">
-                        <span className="label-text">Select Sub Category</span>
-                      </label>
-                      <select
-                        {...register("SubCategoryID")}
-                        className="select select-bordered w-full"
-                      >
-                        <option value="">-- Select Sub Category --</option>
-                        {activeExpenseSubCategory?.map((subCat) => (
-                          <option
-                            key={subCat.subCategoryID}
-                            value={subCat.subCategoryID}
+                      {activeExpenseSubCategoryLoading ? (
+                        <>
+                          <div className="flex justify-center items-center py-8">
+                            <span className="loading loading-ball loading-sm"></span>
+                            <p className="ml-3"> Loading Sub Categories...</p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <label className="label">
+                            <span className="label-text">
+                              Select Sub Category
+                            </span>
+                          </label>
+                          <select
+                            {...register("SubCategoryID")}
+                            className="select select-bordered w-full"
                           >
-                            {subCat.subCategoryName}
-                          </option>
-                        ))}
-                      </select>
+                            <option value="">-- Select Sub Category --</option>
+                            {activeExpenseSubCategory?.map((subCat) => (
+                              <option
+                                key={subCat.subCategoryID}
+                                value={subCat.subCategoryID}
+                              >
+                                {subCat.subCategoryName}
+                              </option>
+                            ))}
+                          </select>
+                        </>
+                      )}
                     </>
                   )}
                 </div>
@@ -268,29 +283,39 @@ const EditExpense = () => {
 
               <div className="grid grid-cols-1 gap-6">
                 <div className="form-control w-full mt-4">
-                  <label className="label">
-                    <span className="label-text">
-                      {activeProjectLoading
-                        ? "loading projects.."
-                        : "Select Project"}
-                    </span>
-                  </label>
-                  <select
-                    {...register("ProjectID")}
-                    className="select select-bordered w-full"
-                  >
-                    <option value="">-- Select Project --</option>
-                    {activeProject?.map((project) => (
-                      <option key={project.projectID} value={project.projectID}>
-                        {project.projectName}
-                      </option>
-                    ))}
-                  </select>
-                  {/* {errors.ProjectID && (
+                  {activeProjectLoading ? (
+                    <>
+                      <div className="flex justify-center items-center py-8">
+                        <span className="loading loading-ball loading-sm"></span>
+                        <p className="ml-3"> Loading Projects...</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <label className="label">
+                        <span className="label-text">Select Project</span>
+                      </label>
+                      <select
+                        {...register("ProjectID")}
+                        className="select select-bordered w-full"
+                      >
+                        <option value="">-- Select Project --</option>
+                        {activeProject?.map((project) => (
+                          <option
+                            key={project.projectID}
+                            value={project.projectID}
+                          >
+                            {project.projectName}
+                          </option>
+                        ))}
+                      </select>
+                      {/* {errors.ProjectID && (
                 <p className="text-red-500 text-sm">
                   {errors.ProjectID.message}
                 </p>
               )} */}
+                    </>
+                  )}
                 </div>
               </div>
 

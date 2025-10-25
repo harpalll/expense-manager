@@ -24,14 +24,32 @@ import {
   toggleProjectStatus,
 } from "./projectSlice.js";
 
+//   ? converts date format
+const formatDate = (projectDate) => {
+  if (!projectDate) return "";
+  const date = new Date(projectDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 // * table columns definition
 const columns = [
   { accessorKey: "projectID", header: "Id", sortingFn: "alphanumeric" },
   { accessorKey: "projectName", header: "Name" },
   { accessorKey: "projectDetail", header: "Detail" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "projectStartDate", header: "Start Date" },
-  { accessorKey: "projectEndDate", header: "End Date" },
+  {
+    accessorKey: "projectStartDate",
+    header: "Start Date",
+    cell: ({ getValue }) => formatDate(getValue()),
+  },
+  {
+    accessorKey: "projectEndDate",
+    header: "End Date",
+    cell: ({ getValue }) => formatDate(getValue()),
+  },
   {
     accessorKey: "isActive",
     header: "Active",

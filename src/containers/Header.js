@@ -92,7 +92,7 @@ function Header() {
           </label>
 
           {/* Notification icon */}
-          <button
+          {/* <button
             className="btn btn-ghost ml-4  btn-circle"
             onClick={() => openNotification()}
           >
@@ -104,7 +104,7 @@ function Header() {
                 </span>
               ) : null}
             </div>
-          </button>
+          </button> */}
 
           {/* Profile icon, opening menu on click */}
           <div className="dropdown dropdown-end ml-4">
@@ -143,9 +143,9 @@ function Header() {
                   </>
                 )}
               </li>
-              <li className="">
+              {/* <li className="">
                 <Link to={"/app/settings-billing"}>Bill History</Link>
-              </li>
+              </li> */}
               <div className="divider mt-0 mb-0"></div>
               <li>
                 <a onClick={logoutUser}>Logout</a>
