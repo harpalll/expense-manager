@@ -10,7 +10,6 @@ const ExcelPreviewModal = ({ extraObject, closeModal }) => {
 
   const apiUrl =
     type === "Expense" ? "/api/Expense/excel" : "/api/Income/excel";
-  console.log(type, apiUrl);
 
   useEffect(() => {
     const fetchPreview = async () => {

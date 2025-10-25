@@ -8,6 +8,7 @@ import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
 import ArrowUpIcon from "@heroicons/react/24/outline/ArrowUpIcon";
 import ArrowUpTrayIcon from "@heroicons/react/24/outline/ArrowUpTrayIcon";
+import ChartPieIcon from "@heroicons/react/24/outline/ChartPieIcon";
 import ArrowDownIcon from "@heroicons/react/24/outline/ArrowDownIcon";
 import { openModal } from "../common/modalSlice.js";
 import {
@@ -27,7 +28,6 @@ import {
 } from "./expenseSlice.js";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
 import axios from "axios";
-import * as XLSX from "xlsx";
 
 //   ? converts date format
 const formatDate = (expenseDate) => {
@@ -176,7 +176,6 @@ function Expense() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]);
   const searchRef = useRef(null);
-  const [previewData, setPreviewData] = useState(null);
 
   useEffect(() => {
     dispatch(fetchExpense());
@@ -202,7 +201,19 @@ function Expense() {
     dispatch(
       openModal({
         title: "Excel Preview",
-        bodyType: MODAL_BODY_TYPES.Excel_Preview,
+        bodyType: MODAL_BODY_TYPES.EXCEL_PREVIEW,
+        extraObject: {
+          type: "Expense",
+        },
+      })
+    );
+  };
+
+  const handleReportGeneration = async () => {
+    dispatch(
+      openModal({
+        title: "Generate Report",
+        bodyType: MODAL_BODY_TYPES.GENERATE_REPORT,
         extraObject: {
           type: "Expense",
         },
@@ -212,13 +223,21 @@ function Expense() {
 
   const TopSideButtons = () => {
     return (
-      <div className="inline-block float-right">
+      <div className="flex gap-4 float-right">
         <button
           className="flex items-center btn px-6 btn-sm normal-case btn-success text-white"
           onClick={handleExportExcel}
         >
           <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
           Export Excel
+        </button>
+
+        <button
+          className="flex items-center btn px-6 btn-sm normal-case btn-primary text-white"
+          onClick={handleReportGeneration}
+        >
+          <ChartPieIcon className="w-4 h-4 mr-2" />
+          Genreate Report
         </button>
       </div>
     );

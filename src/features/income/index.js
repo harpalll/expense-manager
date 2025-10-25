@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 import { fetchIncome, fetchIncomeById, deleteIncome } from "./incomeSlice.js";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil.js";
 import ArrowUpTrayIcon from "@heroicons/react/24/outline/ArrowUpTrayIcon.js";
+import { ChartPieIcon } from "@heroicons/react/24/outline";
 
 //   ? converts date format
 const formatDate = (incomeDate) => {
@@ -203,15 +204,35 @@ function Income() {
     );
   };
 
+  const handleReportGeneration = async () => {
+    dispatch(
+      openModal({
+        title: "Generate Report",
+        bodyType: MODAL_BODY_TYPES.GENERATE_REPORT,
+        extraObject: {
+          type: "Income",
+        },
+      })
+    );
+  };
+
   const TopSideButtons = () => {
     return (
-      <div className="inline-block float-right">
+      <div className="flex gap-4 float-right">
         <button
           className="flex items-center btn px-6 btn-sm normal-case btn-success text-white"
           onClick={handleExportExcel}
         >
           <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
           Export Excel
+        </button>
+
+        <button
+          className="flex items-center btn px-6 btn-sm normal-case btn-primary text-white"
+          onClick={handleReportGeneration}
+        >
+          <ChartPieIcon className="w-4 h-4 mr-2" />
+          Genreate Report
         </button>
       </div>
     );
