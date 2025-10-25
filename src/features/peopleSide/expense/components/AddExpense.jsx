@@ -161,15 +161,11 @@ const AddExpense = () => {
                     onChange={(e) => {
                       const selectedValue = e.target.value;
                       setValue("CategoryID", selectedValue);
-                      setValue("SubCategoryID", ""); // reset subcategory always when category changes
+                      setValue("SubCategoryID", "");
 
                       if (selectedValue) {
-                        // Fetch subcategories only if a valid category is selected
                         dispatch(fetchActiveExpenseSubCategory(selectedValue));
                       } else {
-                        // If user selects default blank category, clear subcategory options
-                        // You can either clear Redux state or just rely on re-render
-                        // easiest: manually clear from redux
                         dispatch({
                           type: "subCategory/clearActiveExpenseSubCategory",
                         });
@@ -328,11 +324,22 @@ const AddExpense = () => {
             {preview && (
               <div className="mt-3">
                 <p className="text-sm mb-1">Preview:</p>
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="w-24 h-24 rounded-full border object-cover"
-                />
+                {watch("AttachmentPath")?.[0]?.type === "application/pdf" ? (
+                  <a
+                    href={preview}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-xs btn-outline btn-neutral"
+                  >
+                    View PDF
+                  </a>
+                ) : (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-24 h-24 rounded-full border object-cover"
+                  />
+                )}
               </div>
             )}
           </div>

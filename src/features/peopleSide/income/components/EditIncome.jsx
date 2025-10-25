@@ -214,11 +214,19 @@ const EditIncome = () => {
                         {...register("CategoryID")}
                         className="select select-bordered w-full"
                         onChange={(e) => {
-                          dispatch(
-                            fetchActiveIncomeSubCategory(e.target.value)
-                          );
-                          // setValue("isExpense", selected.isExpense);
-                          // setValue("isIncome", selected.isIncome);
+                          const selectedValue = e.target.value;
+                          setValue("CategoryID", selectedValue);
+                          setValue("SubCategoryID", "");
+
+                          if (selectedValue) {
+                            dispatch(
+                              fetchActiveIncomeSubCategory(selectedValue)
+                            );
+                          } else {
+                            dispatch({
+                              type: "subCategory/clearActiveIncomeSubCategory",
+                            });
+                          }
                         }}
                       >
                         <option value="">-- Select Category --</option>
@@ -363,16 +371,31 @@ const EditIncome = () => {
                   {/* preview */}
                   {incomeDetails?.attachmentPath && (
                     <div className="mt-3">
-                      <p className="text-sm mb-1">Current Image:</p>
-                      <img
-                        src={incomeDetails.attachmentPath}
-                        alt="Profile"
-                        className="w-24 h-24 rounded-full border object-cover"
-                      />
+                      <p className="text-sm mb-1">Current Attachment:</p>
+                      {incomeDetails.attachmentPath
+                        .toLowerCase()
+                        .endsWith(".pdf") ? (
+                        <a
+                          href={incomeDetails.attachmentPath}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-xs btn-outline btn-neutral"
+                        >
+                          View PDF
+                        </a>
+                      ) : (
+                        <img
+                          src={incomeDetails.attachmentPath}
+                          alt="Attachment"
+                          className="w-24 h-24 rounded-full border object-cover"
+                          onError={(e) => (e.target.style.display = "none")}
+                        />
+                      )}
                     </div>
                   )}
+
                   <label className="label">
-                    <span className="label-text required">
+                    <span className="label-text">
                       Attachment (Image must be a PNG or JPG or pdf and not
                       exceed 2 MB)
                     </span>
@@ -387,11 +410,23 @@ const EditIncome = () => {
                 {preview && (
                   <div className="mt-3">
                     <p className="text-sm mb-1">Preview:</p>
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="w-24 h-24 rounded-full border object-cover"
-                    />
+                    {watch("AttachmentPath")?.[0]?.type ===
+                    "application/pdf" ? (
+                      <a
+                        href={preview}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-xs btn-outline btn-neutral"
+                      >
+                        View PDF
+                      </a>
+                    ) : (
+                      <img
+                        src={preview}
+                        alt="Preview"
+                        className="w-24 h-24 rounded-full border object-cover"
+                      />
+                    )}
                   </div>
                 )}
               </div>

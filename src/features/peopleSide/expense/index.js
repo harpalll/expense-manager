@@ -107,11 +107,29 @@ const getStatusBadge = (isActive) => {
 };
 
 const renderImage = (attachmentPath) => {
+  if (!attachmentPath) return "—";
+
+  const lowerPath = attachmentPath.toLowerCase();
+
+  if (lowerPath.endsWith(".pdf")) {
+    return (
+      <a
+        href={attachmentPath}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-xs btn-outline btn-neutral"
+      >
+        View PDF
+      </a>
+    );
+  }
+
   return (
     <img
       src={attachmentPath}
       alt="Attachment"
       className="w-16 h-16 rounded-full border object-cover"
+      onError={(e) => (e.target.style.display = "none")}
     />
   );
 };

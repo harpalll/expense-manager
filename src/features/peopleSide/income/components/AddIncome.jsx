@@ -142,9 +142,17 @@ const AddExpense = () => {
                     {...register("CategoryID")}
                     className="select select-bordered w-full"
                     onChange={(e) => {
-                      dispatch(fetchActiveIncomeSubCategory(e.target.value));
-                      // setValue("isExpense", selected.isExpense);
-                      // setValue("isIncome", selected.isIncome);
+                      const selectedValue = e.target.value;
+                      setValue("CategoryID", selectedValue);
+                      setValue("SubCategoryID", "");
+
+                      if (selectedValue) {
+                        dispatch(fetchActiveIncomeSubCategory(selectedValue));
+                      } else {
+                        dispatch({
+                          type: "subCategory/clearActiveIncomeSubCategory",
+                        });
+                      }
                     }}
                   >
                     <option value="">-- Select Category --</option>
@@ -299,11 +307,22 @@ const AddExpense = () => {
             {preview && (
               <div className="mt-3">
                 <p className="text-sm mb-1">Preview:</p>
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="w-24 h-24 rounded-full border object-cover"
-                />
+                {watch("AttachmentPath")?.[0]?.type === "application/pdf" ? (
+                  <a
+                    href={preview}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-xs btn-outline btn-neutral"
+                  >
+                    View PDF
+                  </a>
+                ) : (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-24 h-24 rounded-full border object-cover"
+                  />
+                )}
               </div>
             )}
           </div>
