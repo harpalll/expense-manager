@@ -64,14 +64,16 @@ function Register() {
       if (error.response) {
         if (error.response.status === 400) {
           const errors = error.response.data.errors;
-          for (const key in errors) {
-            errors[key].forEach((message) => {
-              toast.error(message);
-            });
+          if (errors) {
+            for (const key in errors) {
+              errors[key].forEach((message) => {
+                toast.error(message);
+              });
+            }
           }
+          toast.error(`ERROR: ${error.response.data.title}`);
         }
 
-        toast.error(`ERROR: ${error.response.data.title}`);
         console.error(
           `ERROR: Status Code: ${error.response.status} || ERRORS:`,
           error.response.data
