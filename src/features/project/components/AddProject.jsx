@@ -35,7 +35,11 @@ const AddPeople = () => {
             });
           }
         }
-        // toast.error(`ERROR: ${error.response.data.message}`);
+        
+        if (error.response.status === 500) {
+          toast.error(`ERROR: ${error.response.data.message}`);
+        }
+
         console.error(
           `ERROR: Status Code: ${error.response.status} || ERRORS:`,
           error.response.data
