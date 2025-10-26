@@ -113,43 +113,58 @@ function AddEditSubCategoryModal({ extraObject, closeModal }) {
         </div>
 
         <div className="form-control w-full mt-4">
-          <label className="label">
-            <span className="label-text required">
-              {activeCategoryLoading
-                ? "loading categories.."
-                : "Select Category"}
-            </span>
-          </label>
-          <select
-            {...register("categoryID", { required: "Category is required" })}
-            className="select select-bordered w-full"
-            onChange={(e) => {
-              const categoryID = Number(e.target.value);
-              const selected = activeCategory.find(
-                (c) => c.categoryID === categoryID
-              );
-              setSelectedCategory(selected);
-              console.log(
-                selectedCategory,
-                selected.isExpense,
-                selected.isIncome
-              );
+          {activeCategoryLoading ? (
+            <>
+              <div className="flex justify-center items-center py-8">
+                <span className="loading loading-ball loading-sm"></span>
+                <p className="ml-3"> Loading Categories...</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <label className="label">
+                <span className="label-text required">Select Category</span>
+              </label>
+              <select
+                {...register("categoryID", {
+                  required: "Category is required",
+                })}
+                className="select select-bordered w-full"
+                onChange={(e) => {
+                  if (e.target.value === "default") {
+                    setValue("isExpense", false);
+                    setValue("isIncome", false);
+                  }
+                  const categoryID = Number(e.target.value);
+                  const selected = activeCategory.find(
+                    (c) => c.categoryID === categoryID
+                  );
+                  setSelectedCategory(selected);
+                  // console.log(
+                  //   selectedCategory,
+                  //   selected.isExpense,
+                  //   selected.isIncome
+                  // );
 
-              if (selected) {
-                setValue("isExpense", selected.isExpense);
-                setValue("isIncome", selected.isIncome);
-              }
-            }}
-          >
-            <option value="">-- Select Category --</option>
-            {activeCategory?.map((cat) => (
-              <option key={cat.categoryID} value={cat.categoryID}>
-                {cat.categoryName}
-              </option>
-            ))}
-          </select>
-          {errors.categoryID && (
-            <p className="text-red-500 text-sm">{errors.categoryID.message}</p>
+                  if (selected) {
+                    setValue("isExpense", selected.isExpense || false);
+                    setValue("isIncome", selected.isIncome || false);
+                  }
+                }}
+              >
+                <option value="default">-- Select Category --</option>
+                {activeCategory?.map((cat) => (
+                  <option key={cat.categoryID} value={cat.categoryID}>
+                    {cat.categoryName}
+                  </option>
+                ))}
+              </select>
+              {errors.categoryID && (
+                <p className="text-red-500 text-sm">
+                  {errors.categoryID.message}
+                </p>
+              )}
+            </>
           )}
         </div>
 

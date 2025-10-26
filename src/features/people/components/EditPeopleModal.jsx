@@ -37,7 +37,6 @@ function EditPeopleModal({ closeModal }) {
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
     setLoading(true);
     try {
       await axios.patch(`/api/People/${peopleDetails.peopleID}`, data);
