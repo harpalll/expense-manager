@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../app/store";
-import { logout, setAuthToken } from "../features/auth/authSlice";
+import { logout, logoutUser, setAuthToken } from "../features/auth/authSlice";
 
 export default function checkAuth() {
   const token = localStorage.getItem("token");
@@ -16,6 +16,7 @@ export default function checkAuth() {
       if (error.response?.status === 401) {
         console.warn("Unauthorized — logging out...");
         store.dispatch(logout());
+        store.dispatch(logoutUser());
       }
       return Promise.reject(error);
     }

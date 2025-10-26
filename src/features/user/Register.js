@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import LandingIntro from "./LandingIntro";
 import InputText from "../../components/Input/InputText";
@@ -8,20 +8,11 @@ import { EyeCloseSVG } from "./components/EyeCloseSVG.jsx";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-/*
-    General Component: 
-     <InputText
-                  defaultValue={registerObj.emailId}
-                  updateType="emailId"
-                  containerStyle="mt-4"
-                  labelTitle="Email Id"
-                  updateFormValue={updateFormValue}
-                />
-*/
-
 function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [preview, setPreview] = useState(null);
+
   //   form state
   const {
     register,
@@ -32,17 +23,40 @@ function Register() {
 
   const password = watch("password");
 
+  useEffect(() => {
+    if (!watch("ProfileImage")?.[0]) {
+      setPreview(null);
+      return;
+    }
+    const file = watch("ProfileImage")[0];
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [watch("ProfileImage")]);
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post("/api/User", {
-        userName: data.name,
-        emailAddress: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-        mobileNo: data.mobileNumber,
-      });
+      const formData = new FormData();
 
+      formData.append("UserName", data.name);
+      formData.append("EmailAddress", data.email);
+      formData.append("Password", data.password);
+      formData.append("ConfirmPassword", data.confirmPassword);
+      formData.append("MobileNo", data.mobileNumber);
+      formData.append("ExpenseDetail", data.ExpenseDetail);
+      //   formData.append("AttachmentPath", data.AttachmentPath);
+
+      if (data.ProfileImage && data.ProfileImage[0]) {
+        formData.append("ProfileImage", data.ProfileImage[0]);
+      }
+
+      const response = await axios.post("/api/User", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       // console.log(`SUCCESS: ${response.data.message}`);
       toast.success("Registration Successfull");
       window.location.href = "/login";
@@ -57,7 +71,7 @@ function Register() {
           }
         }
 
-        // toast.error(`ERROR: ${error.response.data.message}`);
+        toast.error(`ERROR: ${error.response.data.title}`);
         console.error(
           `ERROR: Status Code: ${error.response.status} || ERRORS:`,
           error.response.data
@@ -79,25 +93,6 @@ function Register() {
     // window.location.href = "/app/welcome";
   };
 
-  //   const submitForm = (e) => {
-  //     e.preventDefault();
-  //     setErrorMessage("");
-
-  //     if (registerObj.name.trim() === "")
-  //       return setErrorMessage("Name is required! (use any value)");
-  //     if (registerObj.emailId.trim() === "")
-  //       return setErrorMessage("Email Id is required! (use any value)");
-  //     if (registerObj.password.trim() === "")
-  //       return setErrorMessage("Password is required! (use any value)");
-  //     else {
-  //       setLoading(true);
-  //       // Call API to check user credentials and save token in localstorage
-  //       localStorage.setItem("token", "DumyTokenHere");
-  //       setLoading(false);
-  //       window.location.href = "/app/welcome";
-  //     }
-  //   };
-
   return (
     <div className="min-h-screen bg-base-200 flex items-center">
       <div className="card mx-auto w-full max-w-5xl  shadow-xl">
@@ -111,6 +106,45 @@ function Register() {
             </h2>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
+                <div className="grid grid-cols-1 gap-6">
+                  <div className="form-control w-full mt-4">
+                    <label className="label">
+                      <span className="label-text">
+                        Attachment (Image must be a PNG or JPG or pdf and not
+                        exceed 2 MB)
+                      </span>
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="file-input file-input-bordered w-full"
+                      {...register("ProfileImage")}
+                    />
+                  </div>
+                  {preview && (
+                    <div className="mt-3">
+                      <p className="text-sm mb-1">Preview:</p>
+                      {watch("ProfileImage")?.[0]?.type ===
+                      "application/pdf" ? (
+                        <a
+                          href={preview}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-xs btn-outline btn-neutral"
+                        >
+                          View PDF
+                        </a>
+                      ) : (
+                        <img
+                          src={preview}
+                          alt="Preview"
+                          className="w-24 h-24 rounded-full border object-cover"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="form-control w-full mt-4">
                   <label className="label">
                     <span className={"label-text text-base-content required"}>

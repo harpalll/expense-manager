@@ -28,6 +28,12 @@ export const fetchUserInfo = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
+  localStorage.removeItem("token");
+  delete axios.defaults.headers.common["Authorization"];
+  window.location.href = "/";
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -38,6 +44,7 @@ const authSlice = createSlice({
   },
   reducers: {
     logout: (state) => {
+      // window.location.href = "/";
       state.user = null;
       state.isAuthenticated = false;
       localStorage.removeItem("token");

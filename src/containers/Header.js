@@ -9,7 +9,7 @@ import { openRightDrawer } from "../features/common/rightDrawerSlice";
 import { RIGHT_DRAWER_TYPES } from "../utils/globalConstantUtil";
 import { NavLink, Routes, Link, useLocation } from "react-router-dom";
 import axios from "axios";
-import { fetchUserInfo } from "../features/auth/authSlice";
+import { fetchUserInfo, logout } from "../features/auth/authSlice";
 // fetch username from /me endpoint
 const userInfo = JSON.parse(localStorage.getItem("info"));
 
@@ -40,19 +40,10 @@ function Header() {
     // 👆 false parameter is required for react project
   }, []);
 
-  // Opening right sidebar for notification
-  const openNotification = () => {
-    dispatch(
-      openRightDrawer({
-        header: "Notifications",
-        bodyType: RIGHT_DRAWER_TYPES.NOTIFICATION,
-      })
-    );
-  };
-
   function logoutUser() {
-    localStorage.clear();
-    window.location.href = "/";
+    // localStorage.clear();
+    // window.location.href = "/";
+    dispatch(logout());
   }
 
   return (
@@ -91,32 +82,8 @@ function Header() {
             />
           </label>
 
-          {/* Notification icon */}
-          {/* <button
-            className="btn btn-ghost ml-4  btn-circle"
-            onClick={() => openNotification()}
-          >
-            <div className="indicator">
-              <BellIcon className="h-6 w-6" />
-              {noOfNotifications > 0 ? (
-                <span className="indicator-item badge badge-secondary badge-sm">
-                  {noOfNotifications}
-                </span>
-              ) : null}
-            </div>
-          </button> */}
-
           {/* Profile icon, opening menu on click */}
           <div className="dropdown dropdown-end ml-4">
-            {/* <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 rounded-full">
-                {
-                  userInfo[
-                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-                  ]
-                }
-              </div>
-            </label> */}
             <label tabIndex={0} className="btn btn-ghost">
               <div className="w-10">
                 {loading ? (
@@ -154,9 +121,6 @@ function Header() {
                   </>
                 )}
               </li>
-              {/* <li className="">
-                <Link to={"/app/settings-billing"}>Bill History</Link>
-              </li> */}
               <div className="divider mt-0 mb-0"></div>
               <li>
                 <a onClick={logoutUser}>Logout</a>
