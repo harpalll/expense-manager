@@ -38,15 +38,6 @@ function Dashboard() {
   }, []);
 
   const statsData = [
-    // {
-    //   title: "Active People",
-    //   value: "5.6k",
-    //   icon: <UsersIcon className="w-8 h-8" />,
-    //   description: "↙ 300 (18%)",
-    //   hasLink: true,
-    //   link: "/admin/people",
-    //   linkName: "view people",
-    // },
     {
       title: "Total Expense",
       value: totalExpense,
@@ -71,20 +62,10 @@ function Dashboard() {
     },
   ];
 
-  const updateDashboardPeriod = (newRange) => {
-    // Dashboard range changed, write code to refresh your values
-    dispatch(
-      showNotification({
-        message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
-        status: 1,
-      })
-    );
-  };
-
   return (
     <>
       {/** ---------------------- Greet ------------------------- */}
-      <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod} />
+      <DashboardTopBar />
 
       {/** ---------------------- Stats ------------------------- */}
       <div className="grid lg:grid-cols-2 mt-4 md:grid-cols-2 grid-cols-1 gap-6 mt">

@@ -11,10 +11,13 @@ import AddEditSubCategoryModal from "../features/subCategory/components/AddEditS
 import ExportPreviewModal from "../features/common/components/ExportPreviewModal";
 import ReportModal from "../features/common/components/ReportMoal";
 import { clearsubcategoryDetails } from "../features/subCategory/subCategorySlice";
+import GenerateTodaysReportModal from "../features/dashboard/components/GenerateTodaysReportModal";
 
 export default function ModalLayout() {
   const dispatch = useDispatch();
-  const { isOpen, bodyType, extraObject } = useSelector((state) => state.modal);
+  const { isOpen, bodyType, extraObject, title } = useSelector(
+    (state) => state.modal
+  );
 
   if (!isOpen) return null;
 
@@ -50,6 +53,14 @@ export default function ModalLayout() {
         );
       case MODAL_BODY_TYPES.GENERATE_REPORT:
         return <ReportModal extraObject={extraObject} closeModal={close} />;
+      case MODAL_BODY_TYPES.GENERATE_TODAYS_REPORT:
+        return (
+          <GenerateTodaysReportModal
+            title={title}
+            extraObject={extraObject}
+            closeModal={close}
+          />
+        );
       default:
         return null;
     }

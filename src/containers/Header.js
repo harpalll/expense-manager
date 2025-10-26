@@ -124,7 +124,18 @@ function Header() {
                     <span className="loading loading-ball loading-sm"></span>
                   </>
                 ) : (
-                  <>{user.name}</>
+                  // w-4 h-4
+                  <>
+                    {user.profilePicture ? (
+                      <img
+                        alt="profile Picture"
+                        src={user.profilePicture}
+                        className="w-8 h-8 rounded-full border object-cover"
+                      />
+                    ) : (
+                      <>{user.name}</>
+                    )}
+                  </>
                 )}
               </div>
             </label>

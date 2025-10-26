@@ -92,20 +92,10 @@ function Dashboard() {
     },
   ];
 
-  const updateDashboardPeriod = (newRange) => {
-    // Dashboard range changed, write code to refresh your values
-    dispatch(
-      showNotification({
-        message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
-        status: 1,
-      })
-    );
-  };
-
   return (
     <>
       {/** ---------------------- Greet ------------------------- */}
-      <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod} />
+      <DashboardTopBar />
 
       {/** ---------------------- Stats ------------------------- */}
       <div className="grid lg:grid-cols-3 mt-4 md:grid-cols-3 grid-cols-1 gap-6">

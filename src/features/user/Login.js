@@ -198,13 +198,18 @@ function Login() {
                 </div>
               </div>
 
-              <div className="text-right text-primary">
+              {/* <div className="flex justify-between text-primary">
                 <Link to="/forgot-password">
                   <span className="text-sm  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
                     Forgot Password?
                   </span>
                 </Link>
-              </div>
+                <Link to="/change-password">
+                  <span className="text-sm  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
+                    Change Password
+                  </span>
+                </Link>
+              </div> */}
 
               <button type="submit" className={"btn mt-2 w-full btn-primary"}>
                 {loading ? (
