@@ -41,7 +41,6 @@ textarea {
 }
 
 /* Custom Scrollbar  */
-
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -72,3 +71,24 @@ textarea {
     display: none;
   }
 } */
+/* ✅ Dark mode support for theme-change (DaisyUI) */
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1f2937; /* gray-800 */
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #0284c7,
+    #38bdf8
+  ); /* blue-600 → sky-400 */
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0ea5e9, #7dd3fc);
+}
+
+/* Firefox (dark mode) */
+html[data-theme="dark"] * {
+  scrollbar-color: #38bdf8 #1f2937;
+}
