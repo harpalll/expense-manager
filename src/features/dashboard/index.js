@@ -70,7 +70,7 @@ function Dashboard() {
     },
     {
       title: "Total Expense",
-      value: totalExpense,
+      value: `₹ ${totalExpense}`,
       icon: <CreditCardIcon className="w-8 h-8" />,
       description: "Total Expense",
       hasLink: true,
@@ -81,7 +81,7 @@ function Dashboard() {
     },
     {
       title: "Total Income",
-      value: totalIncome,
+      value: `₹ ${totalIncome}`,
       icon: <BanknotesIcon className="w-8 h-8" />,
       description: "Total Income",
       hasLink: true,

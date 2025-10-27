@@ -67,7 +67,7 @@ const columns = [
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: ({ getValue }) => getValue() || "—",
+    cell: ({ getValue }) => `₹ ${getValue()}` || "—",
   },
   {
     accessorKey: "incomeDetail",
